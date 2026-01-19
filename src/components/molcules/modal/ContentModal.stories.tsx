@@ -69,16 +69,7 @@ const meta = {
     trigger: {
       triggerButton: <Button colorPalette="blue">모달 열기</Button>,
     },
-    buttons: (
-      <VStack w="full" >
-        <Button>
-          시작하기
-        </Button>
-        <Button colorPalette="gray" variant="outline">
-          나중에 할게요
-        </Button>
-      </VStack>
-    ),
+    buttons: (<VStack w="full"><Button>시작하기</Button><Button colorPalette="gray" variant="outline">나중에 할게요</Button></VStack>),
     footerDescription: '추후 설정에서 언제든 다시 진행할 수 있습니다.',
     icon: LuCrown,
     colorPalette: 'blue',

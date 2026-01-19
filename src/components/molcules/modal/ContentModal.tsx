@@ -112,7 +112,8 @@ const ContentModal = ({
                 rowGap={3}
                 colorPalette={colorPalette}
                 css={{
-                  '& > button': {
+                  // 전달된 버튼이 래퍼(VStack 등)를 포함해도 전체 폭을 차지하도록 자손 버튼을 모두 대상으로 지정
+                  '& button': {
                     width: '100%',
                     borderRadius: 'full',
                   },
