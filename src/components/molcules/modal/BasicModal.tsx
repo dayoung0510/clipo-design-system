@@ -1,5 +1,5 @@
 import { CloseButton } from '../../atoms/close-button/close-button'
-import { Button, Dialog, Portal, Spacer, Text } from '@chakra-ui/react'
+import { Button, Dialog, HStack, Portal, Spacer, Text } from '@chakra-ui/react'
 import type {
   ButtonProps,
   DialogContentProps,
@@ -57,28 +57,42 @@ const BasicModal = ({
   ...props
 }: BasicModalProps) => {
   const isControlled = 'open' in trigger
-  const footerAlign = footer.align === 'between' ? 'space-between' : 'flex-end'
 
   const titles = Array.isArray(props.title) ? props.title : [props.title]
   const ariaLabels = titles.join(' ')
   const testIdPrefix = titles.join(' ').replace(/\s+/g, '-').replace(/--+/g, '-').toLowerCase()
 
   const renderCancelButton = () => {
-    if (!footer.cancelButton) return null
-    if (React.isValidElement(footer.cancelButton)) {
+    if (footer.cancelButton && React.isValidElement(footer.cancelButton)) {
       return footer.cancelButton
     }
-    const cancelCfg = footer.cancelButton as CancelButtonConfig
-    if (cancelCfg.isHide) return null
-    return (
-      <Dialog.ActionTrigger
-        asChild={!cancelCfg.onCancel} // onCancel 없으면 기본 닫기 동작
-        onClick={() => {
-          cancelCfg.onCancel?.()
-        }}
-      >
+
+    const cancelCfg: CancelButtonConfig =
+      footer.cancelButton && !React.isValidElement(footer.cancelButton)
+        ? (footer.cancelButton as CancelButtonConfig)
+        : {}
+
+    // onCancel이 있으면 수동 처리(닫기 없음), 없으면 기본 닫힘 트리거
+    if (cancelCfg.onCancel) {
+      const { onCancel, ...rest } = cancelCfg
+      return (
         <Button
           variant="outline"
+          hidden={cancelCfg.isHide}
+          data-testid={`${testIdPrefix}-modal-cancel-button`}
+          onClick={() => onCancel()}
+          {...rest}
+        >
+          {cancelCfg.label || '취소'}
+        </Button>
+      )
+    }
+
+    return (
+      <Dialog.ActionTrigger asChild>
+        <Button
+          variant="outline"
+          hidden={cancelCfg.isHide}
           data-testid={`${testIdPrefix}-modal-cancel-button`}
           {...cancelCfg}
         >
@@ -89,18 +103,23 @@ const BasicModal = ({
   }
 
   const renderSaveButton = () => {
-    if (!footer.saveButton) return null
-    if (React.isValidElement(footer.saveButton)) {
+    if (footer.saveButton && React.isValidElement(footer.saveButton)) {
       return footer.saveButton
     }
-    const saveCfg = footer.saveButton as SaveButtonConfig
-    if (saveCfg.isHide) return null
+
+    const saveCfg: SaveButtonConfig =
+      footer.saveButton && !React.isValidElement(footer.saveButton)
+        ? (footer.saveButton as SaveButtonConfig)
+        : {}
+
     return (
       <Button
         data-testid={`${testIdPrefix}-modal-save-button`}
         {...saveCfg}
-        onClick={() => {
+        hidden={saveCfg.isHide}
+        onClick={(e) => {
           saveCfg.onSave?.()
+          saveCfg.onClick?.(e)
         }}
       >
         {saveCfg.label || '저장'}
@@ -162,21 +181,35 @@ const BasicModal = ({
 
             {/* 푸터 */}
             {!footer.isHide && (
-              <Dialog.Footer
-                data-testid={`${testIdPrefix}-modal-footer`}
-                justifyContent={footerAlign}
-              >
-                {/* 푸터 좌측 설명문구 */}
+              <Dialog.Footer data-testid={`${testIdPrefix}-modal-footer`}>
                 {footer.description && (
-                  <React.Fragment>
+                  <>
                     <Text textStyle="b2-medium-compact" color="fg.muted">
                       {footer.description}
                     </Text>
                     <Spacer />
-                  </React.Fragment>
+                    <HStack columnGap={3}>
+                      {renderCancelButton()}
+                      {renderSaveButton()}
+                    </HStack>
+                  </>
                 )}
-                {renderCancelButton()}
-                {renderSaveButton()}
+
+                {!footer.description && footer.align === 'between' && (
+                  <>
+                    {renderCancelButton()}
+                    <Spacer />
+                    {renderSaveButton()}
+                  </>
+                )}
+
+                {!footer.description && (footer.align === 'end' || !footer.align) && (
+                  <>
+                    <Spacer />
+                    {renderCancelButton()}
+                    {renderSaveButton()}
+                  </>
+                )}
               </Dialog.Footer>
             )}
           </Dialog.Content>

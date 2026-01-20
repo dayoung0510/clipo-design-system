@@ -71,7 +71,7 @@ const meta: Meta<typeof BasicModal> = {
     },
     'footer.description': {
       name: 'footer > description',
-      description: '푸터 좌측 안내 문구',
+      description: '푸터 좌측 안내 문구<br /><br />이 항목이 존재할 경우에는 버튼들의 align prop은 무시되고 항상 우측(end)으로 정렬됩니다.',
       table: { category: 'Footer', type: { summary: 'string | ReactNode' } },
       control: { type: 'text' },
     },
