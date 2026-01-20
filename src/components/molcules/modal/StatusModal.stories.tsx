@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Button } from '@chakra-ui/react'
 import { LuCrown, LuSparkles, LuBell, LuSmile, LuAirplay } from 'react-icons/lu'
-import ContentModal from './ContentModal'
+import StatusModal from './StatusModal'
 
 const meta = {
-  title: 'Molcules/Modal/ContentModal',
-  component: ContentModal,
+  title: 'Molcules/Modal/StatusModal',
+  component: StatusModal,
   parameters: {
     layout: 'centered',
     docs: {
@@ -94,12 +94,12 @@ const meta = {
     icon: LuCrown,
 
   },
-} satisfies Meta<typeof ContentModal>
+} satisfies Meta<typeof StatusModal>
 
 export default meta
 
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
-  render: (args) => <ContentModal {...args} />,
+  render: (args) => <StatusModal {...args} />,
 }

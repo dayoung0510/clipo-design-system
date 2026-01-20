@@ -26,7 +26,7 @@ type TriggerProps =
   | Pick<UseDisclosureReturn, 'open' | 'setOpen'>
   | Pick<UseDisclosureReturn, 'open' | 'onClose' | 'onOpen'>
 
-type ContentModalProps = {
+type StatusModalProps = {
   title: string
   description?: string
   buttons: ReactNode | ReactNode[]
@@ -36,7 +36,7 @@ type ContentModalProps = {
   trigger: TriggerProps
 } & Omit<DialogRootProps, 'open' | 'children'>
 
-const ContentModal = ({ trigger, icon = LuCrown, ...props }: ContentModalProps) => {
+const StatusModal = ({ trigger, icon = LuCrown, ...props }: StatusModalProps) => {
   const isControlled = 'open' in trigger
   const colorPalette = 'blue'
 
@@ -133,4 +133,4 @@ const ContentModal = ({ trigger, icon = LuCrown, ...props }: ContentModalProps) 
   )
 }
 
-export default ContentModal
+export default StatusModal
