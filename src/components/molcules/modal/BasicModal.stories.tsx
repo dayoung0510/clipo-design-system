@@ -86,6 +86,13 @@ const meta: Meta<typeof BasicModal> = {
       table: { category: 'Footer', type: { summary: 'string' } },
       control: { type: 'text' },
     },
+    'confirmButton.onCancel': {
+      name: '🟠 footer > cancelButton > onCancel',
+      description: '취소 버튼 클릭 핸들러',
+      table: { category: 'Footer', type: { summary: '() => void' } },
+      control: false,
+      action: 'onCancel',
+    },
     'footer.cancelButton.isHide': {
       name: '🟠 footer > cancelButton > isHide',
       description: '취소 버튼 숨김 여부',
@@ -124,7 +131,7 @@ const meta: Meta<typeof BasicModal> = {
     'footer.saveButton.onSave': undefined,
     'footer.cancelButton.label': '취소',
     'footer.cancelButton.isHide': false,
-    
+    'footer.cancelButton.onCancel': undefined,
     trigger: {
       triggerButton: <Button>모달 열기</Button>,
     },

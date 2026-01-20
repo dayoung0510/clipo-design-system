@@ -26,7 +26,7 @@ type BasicModalProps = {
     align?: 'end' | 'between'
     description?: string | ReactNode
     saveButton?: ButtonProps & { label?: string; isHide?: boolean; onSave?: () => void }
-    cancelButton?: ButtonProps & { label?: string; isHide?: boolean }
+    cancelButton?: ButtonProps & { label?: string; isHide?: boolean; onCancel?: () => void }
   }
   trigger: TriggerProps
   size?: 'sm' | 'md' | 'lg'
@@ -115,7 +115,12 @@ const BasicModal = ({
                   </React.Fragment>
                 )}
                 {!footer.cancelButton?.isHide && (
-                  <Dialog.ActionTrigger asChild>
+                  <Dialog.ActionTrigger
+                    asChild={!footer.cancelButton?.onCancel} // onCancel이 없으면 모달닫기 동작
+                    onClick={() => {
+                      footer.cancelButton?.onCancel?.()
+                    }}
+                  >
                     <Button
                       variant="outline"
                       data-testid={`${testIdPrefix}-modal-cancel-button`}
