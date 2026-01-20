@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Button } from '@chakra-ui/react'
-import { LuCrown, LuSparkles, LuBell, LuSmile, LuAirplay } from 'react-icons/lu'
+import { Button, HStack, Icon } from '@chakra-ui/react'
+import { LuCrown, LuSparkles, LuBell, LuSmile, LuAirplay, LuInfo } from 'react-icons/lu'
 import StatusModal from './StatusModal'
 
 const meta = {
@@ -46,7 +46,7 @@ const meta = {
     // Visuals
     icon: {
       description: '상단에 표시할 아이콘을 선택합니다.',
-      table: { category: 'Visual', type: { summary: 'IconType' } },
+      table: { category: 'Main', type: { summary: 'IconType' } },
       control: { type: 'select' },
       options: ['LuCrown', 'LuSparkles', 'LuBell', 'LuSmile', 'LuAirplay'],
       mapping: {
@@ -71,8 +71,13 @@ const meta = {
       options: ['미지정', '기본 안내 문구'],
       mapping: {
         미지정: undefined,
-        '기본 안내 문구': '이 부분은 옵셔널이고, footer description 영역입니다.',
+        '기본 안내 문구': <HStack><Icon as={LuInfo} />이 부분은 옵셔널이고, footer description 영역입니다.</HStack>,
       },
+    },
+    closeOnInteractOutside : {
+      description: '모달 바깥영역 클릭 시 모달 닫기 여부',
+      table: { category: 'Layout', type: { summary: 'boolean' } },
+      control: { type: 'boolean' },
     },
 
     // Trigger

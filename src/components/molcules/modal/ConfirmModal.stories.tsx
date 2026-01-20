@@ -106,7 +106,7 @@ const meta = {
       options: ['미지정', '안내 문구'],
       mapping: { 
         미지정: undefined,
-        '안내 문구': <HStack><LuInfo />삭제 시 복구할 수 없습니다.</HStack>,
+        '안내 문구': <HStack><LuInfo />이 부분은 옵셔널이고, 아이콘/링크 등도 넣기 가능</HStack>,
       },
     },
     modalContentProps: {
@@ -114,6 +114,11 @@ const meta = {
       table: { category: 'Layout', type: { summary: 'DialogContentProps' } },
       control: false,
     },
+    closeOnInteractOutside : {
+      description: '모달 바깥영역 클릭 시 모달 닫기 여부',
+      table: { category: 'Layout', type: { summary: 'boolean' } },
+      control: { type: 'boolean' },
+    }
   } as any,
   args: {
     title: '정말로 삭제하시겠어요?',

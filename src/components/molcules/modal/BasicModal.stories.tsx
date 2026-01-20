@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Button, Text as ChakraText } from '@chakra-ui/react'
+import { Button, Text as ChakraText, HStack } from '@chakra-ui/react'
 import React from 'react'
 import BasicModal from './BasicModal'
+import { LuInfo } from 'react-icons/lu'
 
 const meta: Meta<typeof BasicModal> = {
   title: 'Molcules/Modal/BasicModal',
@@ -146,6 +147,11 @@ const meta: Meta<typeof BasicModal> = {
       table: { category: 'Layout', type: { summary: 'DialogContentProps' } },
       control: false,
     },
+    closeOnInteractOutside : {
+      description: '모달 바깥영역 클릭 시 모달 닫기 여부',
+      table: { category: 'Layout', type: { summary: 'boolean' } },
+      control: { type: 'boolean' },
+    }
   } as any,
   args: {
     title: '기본 모달 제목',
@@ -158,7 +164,7 @@ const meta: Meta<typeof BasicModal> = {
     },
     'footer.isHide': false,
     'footer.align': 'end',
-    'footer.description': '추가 안내 문구를 표시할 수 있습니다.',
+    'footer.description': <HStack><LuInfo />이 부분은 옵셔널이고, 아이콘 등도 넣기 가능</HStack>,
     'footer.saveButton.label': '저장',
     'footer.saveButton.isHide': false,
     'footer.saveButton.onSave': undefined,
