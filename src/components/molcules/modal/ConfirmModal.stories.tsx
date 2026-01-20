@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Button } from '@chakra-ui/react'
+import { Button, HStack } from '@chakra-ui/react'
+import { LuCrown, LuSparkles, LuBell, LuSmile, LuInfo } from 'react-icons/lu'
 import ConfirmModal from './ConfirmModal'
 
 const meta = {
@@ -18,11 +19,11 @@ const meta = {
   argTypes: {
     // 1) 메인 정보
     title: {
-      description: '모달의 제목입니다. string만 가능합니다.',
+      description: '모달 제목입니다. string만 가능합니다(링크, 아이콘, 뱃지 포함 불가❌).',
       table: { category: 'Main', type: { summary: 'string' } },
     },
     description: {
-      description: '제목 아래에 표시되는 설명입니다. string만 가능합니다.',
+      description: '제목 아래에 표시되는 설명입니다. string만 가능합니다(링크, 아이콘, 뱃지 포함 불가❌).',
       table: { category: 'Main', type: { summary: 'string' } },
     },
 
@@ -36,56 +37,101 @@ const meta = {
 
     // 3) 변형 옵션
     modalType: {
-      description: "모달 타입을 선택합니다.<br/><br/>- check: 체크아이콘+파랑<br/>- trash: 휴지통아이콘+빨강<br/>- custom: 커스텀 아이콘+커스텀 색상",
-      table: { category: 'Variant', type: { summary: "check | trash | custom" } },
-    },
-    customColorPalette: {
-      description: "modalType이 'custom'일 때 필요한 색상 팔레트",
-      table: { category: 'Variant', type: { summary: 'ColorPalette' } },
+      description:
+        '모달 타입을 선택합니다.<br/><br/>- positive: 파랑 컬러 + 체크 아이콘<br/>- negative: 빨강 컬러 + 휴지통 아이콘',
+      table: { category: 'Variant', type: { summary: 'positive | negative' } },
+      control: { type: 'select' },
+      options: ['positive', 'negative'],
     },
     customIcon: {
-      description: "modalType이 'custom'일 때 필요한 아이콘",
+      description: '아이콘을 교체합니다 (컬러는 modalType에 따라 결정됨).',
       table: { category: 'Variant', type: { summary: 'IconType' } },
-      control: false,
+      control: { type: 'select' },
+      options: ['LuCrown', 'LuSparkles', 'LuBell', 'LuSmile'],
+      mapping: {
+        LuCrown,
+        LuSparkles,
+        LuBell,
+        LuSmile,
+      },
     },
 
     // 4) 버튼/푸터
-    cancelButton: {
-      description: '취소버튼 label, onClick, disabled...',
-      table: { category: 'Footer', type: { summary: '{ label?: string; buttonProps?: ButtonProps }' } },
+    confirmButton: {
+      description: '확인버튼', // disabled
+      table: { category: 'Footer', disable: true },
+    },
+    'confirmButton.label':{
+      name: '🟢 confirmButton > label',
+      description: '확인버튼 라벨',
+      table: { category: 'Footer', type: { summary: 'string' } },
+      control: { type: 'text' },
+    },
+    'confirmButton.onConfirm': {
+      name: '🟢 confirmButton > onConfirm',
+      description: '확인 버튼 클릭 핸들러',
+      table: { category: 'Footer', type: { summary: '() => void' } },
+      control: false,
+      action: 'onConfirm',
+    },
+    'confirmButton.buttonProps': {
+      name: '🟢 confirmButton > buttonProps',
+      description: '확인 버튼에 전달할 추가 ButtonProps',
+      table: { category: 'Footer', type: { summary: 'ButtonProps' } },
       control: false,
     },
-    confirmButton: {
-      description: '확인버튼 label, onClick, disabled...',
-      table: { category: 'Footer', type: { summary: '{ label?: string; buttonProps?: ButtonProps }' } },
+    cancelButton: { // disabled
+      description: '취소버튼',
+      table: { category: 'Footer', disable: true },
+    },
+    'cancelButton.label':
+     {
+      name: '🟠 cancelButton > label',
+      description: '취소버튼 라벨',
+      table: { category: 'Footer', type: { summary: 'string' } },
+      control: { type: 'text' },
+    },
+    'cancelButton.buttonProps': {
+      name: '🟠 cancelButton > buttonProps',
+      description: '취소버튼에 전달할 추가 ButtonProps',
+      table: { category: 'Footer', type: { summary: 'ButtonProps' } },
       control: false,
     },
     footerDescription: {
-      description: '버튼 하단에 표시되는 설명 문구',
+      name: '🟡 footerDescription',
+      description:
+        '버튼 하단에 표시되는 설명 문구<br/>링크, 아이콘 등을 포함할 수 있습니다.<br/><br/>컨트롤에서 "미지정"을 선택하면 props를 전달하지 않은 상태를 확인할 수 있습니다.',
       table: { category: 'Footer', type: { summary: 'string | ReactNode' } },
-      control: false,
+      control: { type: 'radio' },
+      options: ['미지정', '안내 문구'],
+      mapping: { 
+        미지정: undefined,
+        '안내 문구': <HStack><LuInfo />삭제 시 복구할 수 없습니다.</HStack>,
+      },
     },
     modalContentProps: {
-      description: '모달 컨텐츠 영역의 추가 props',
+      description: '모달 컨텐츠 영역의 추가 props<br /><br />특수한 경우가 아니면 css는 건드리지 않습니다.',
       table: { category: 'Layout', type: { summary: 'DialogContentProps' } },
       control: false,
     },
-    size: {
-      description: '모달 크기 (xs 사이즈 only)',
-      table: { category: 'Layout' },
-    },
-  },
+  } as any,
   args: {
     title: '정말로 삭제하시겠어요?',
     description: '이 작업은 되돌릴 수 없습니다.',
-    modalType: 'check',
+    modalType: 'positive',
     trigger: {
       triggerButton: <Button colorPalette="blue">모달 열기</Button>,
     },
-    cancelButton: { label: '취소' },
+    
     confirmButton: { label: '확인' },
-    footerDescription: '삭제 시 복구할 수 없습니다.',
-  },
+    'confirmButton.label': '확인',
+    'confirmButton.onConfirm': undefined,
+    'confirmButton.buttonProps': undefined,
+    cancelButton: { label: '취소' },
+    'cancelButton.label': '취소',
+    'cancelButton.buttonProps': undefined,
+    footerDescription: '안내 문구',
+  } as any,
 } satisfies Meta<typeof ConfirmModal>
 
 export default meta
@@ -93,5 +139,26 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
-  render: (args) => <ConfirmModal {...args} />,
+  render: (args) => {
+    const a = args as any
+    const mergedConfirmButton = {
+      ...(args.confirmButton ?? {}),
+      label: a['confirmButton.label'] ?? args.confirmButton?.label,
+      onConfirm: a['confirmButton.onConfirm'] ?? args.confirmButton?.onConfirm,
+      buttonProps: a['confirmButton.buttonProps'] ?? args.confirmButton?.buttonProps,
+    }
+    const mergedCancelButton = {
+      ...(args.cancelButton ?? {}),
+      label: a['cancelButton.label'] ?? args.cancelButton?.label,
+      buttonProps: a['cancelButton.buttonProps'] ?? args.cancelButton?.buttonProps,
+    }
+
+    return (
+      <ConfirmModal
+        {...args}
+        confirmButton={mergedConfirmButton}
+        cancelButton={mergedCancelButton}
+      />
+    )
+  },
 }

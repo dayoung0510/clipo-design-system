@@ -2,6 +2,7 @@ import { CloseButton } from '../../atoms/close-button/close-button'
 import { Button, Dialog, Portal, Spacer, Text } from '@chakra-ui/react'
 import type {
   ButtonProps,
+  DialogContentProps,
   DialogRootProps,
   DialogTriggerProps,
   UseDisclosureReturn,
@@ -19,17 +20,26 @@ type TriggerProps =
 
 type BasicModalProps = {
   title: string | ReactNode
+  modalContentProps?: DialogContentProps
   footer: {
     isHide?: boolean
     align?: 'end' | 'between'
-    infoText?: string | ReactNode
-    saveButton?: ButtonProps & { label?: string; isHide?: boolean }
+    description?: string | ReactNode
+    saveButton?: ButtonProps & { label?: string; isHide?: boolean; onSave?: () => void }
     cancelButton?: ButtonProps & { label?: string; isHide?: boolean }
   }
   trigger: TriggerProps
+  size?: 'sm' | 'md' | 'lg'
 } & Omit<DialogRootProps, 'open'>
 
-const BasicModal = ({ trigger, footer, children, size = 'md', ...props }: BasicModalProps) => {
+const BasicModal = ({
+  trigger,
+  footer,
+  modalContentProps,
+  children,
+  size = 'md',
+  ...props
+}: BasicModalProps) => {
   const isControlled = 'open' in trigger
   const footerAlign = footer.align === 'between' ? 'space-between' : 'flex-end'
 
@@ -64,7 +74,7 @@ const BasicModal = ({ trigger, footer, children, size = 'md', ...props }: BasicM
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content data-testid={`${testIdPrefix}-modal-content`}>
+          <Dialog.Content data-testid={`${testIdPrefix}-modal-content`} {...modalContentProps}>
             {/* 상단 X버튼 */}
             <Dialog.CloseTrigger asChild={true}>
               <CloseButton colorPalette="gray" size="sm" />
@@ -80,7 +90,14 @@ const BasicModal = ({ trigger, footer, children, size = 'md', ...props }: BasicM
             </Dialog.Header>
 
             {/* 바디 */}
-            <Dialog.Body data-testid={`${testIdPrefix}-modal-body`}>{children}</Dialog.Body>
+            <Dialog.Body
+              data-testid={`${testIdPrefix}-modal-body`}
+              whiteSpace="pre-wrap"
+              maxH="80dvh"
+              overflow="auto"
+            >
+              {children}
+            </Dialog.Body>
 
             {/* 푸터 */}
             {!footer.isHide && (
@@ -89,10 +106,10 @@ const BasicModal = ({ trigger, footer, children, size = 'md', ...props }: BasicM
                 justifyContent={footerAlign}
               >
                 {/* 푸터 좌측 설명문구 */}
-                {footer.infoText && (
+                {footer.description && (
                   <React.Fragment>
                     <Text textStyle="b2-medium-compact" color="fg.muted">
-                      {footer.infoText}
+                      {footer.description}
                     </Text>
                     <Spacer />
                   </React.Fragment>
@@ -109,7 +126,13 @@ const BasicModal = ({ trigger, footer, children, size = 'md', ...props }: BasicM
                   </Dialog.ActionTrigger>
                 )}
                 {!footer.saveButton?.isHide && (
-                  <Button data-testid={`${testIdPrefix}-modal-save-button`} {...footer.saveButton}>
+                  <Button
+                    data-testid={`${testIdPrefix}-modal-save-button`}
+                    {...footer.saveButton}
+                    onClick={() => {
+                      footer.saveButton?.onSave?.()
+                    }}
+                  >
                     {footer.saveButton?.label || '저장'}
                   </Button>
                 )}

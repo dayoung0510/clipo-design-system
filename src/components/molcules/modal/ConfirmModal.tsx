@@ -21,6 +21,7 @@ import { LuCircleCheckBig, LuTrash2 } from 'react-icons/lu'
  *
  */
 
+
 type TriggerProps =
   | {
       triggerProps?: DialogTriggerProps
@@ -30,41 +31,26 @@ type TriggerProps =
   | Pick<UseDisclosureReturn, 'open' | 'onClose' | 'onOpen'>
 
 type BaseConfirmModalProps = {
+  modalType?: 'positive' | 'negative'
+  customIcon?: IconType
   title: string
   description?: string
   cancelButton?: { label?: string; buttonProps?: ButtonProps }
-  confirmButton?: { label?: string; buttonProps?: ButtonProps }
+  confirmButton?: { label?: string; onConfirm?: () => void; buttonProps?: ButtonProps }
   modalContentProps?: DialogContentProps
   footerDescription?: string | ReactNode
   trigger: TriggerProps
 } & Omit<DialogRootProps, 'open' | 'children'>
 
-type CustomVariantProps = {
-  modalType: 'custom'
-  customColorPalette: ColorPalette
-  customIcon: IconType
-}
-
-type NonCustomVariantProps = {
-  modalType?: 'check' | 'trash'
-  customColorPalette?: never
-  customIcon?: never
-}
-
-export type ConfirmModalProps =
-  | (BaseConfirmModalProps & CustomVariantProps)
-  | (BaseConfirmModalProps & NonCustomVariantProps)
-
 const iconColorSet = {
-  check: { colorPalette: 'blue', icon: LuCircleCheckBig },
-  trash: { colorPalette: 'red', icon: LuTrash2 },
-  custom: { colorPalette: undefined, icon: undefined },
+  positive: { colorPalette: 'blue', icon: LuCircleCheckBig },
+  negative: { colorPalette: 'red', icon: LuTrash2 },
 }
 
-const ConfirmModal = ({ trigger, modalType = 'check', ...props }: ConfirmModalProps) => {
+const ConfirmModal = ({ trigger, modalType = 'positive', ...props }: BaseConfirmModalProps) => {
   const isControlled = 'open' in trigger
 
-  const colorPalette = props.customColorPalette ?? iconColorSet[modalType].colorPalette
+  const colorPalette = iconColorSet[modalType].colorPalette
   const icon = props.customIcon ?? iconColorSet[modalType].icon
 
   const cancelText = props.cancelButton?.label ?? '아니오'
@@ -74,9 +60,9 @@ const ConfirmModal = ({ trigger, modalType = 'check', ...props }: ConfirmModalPr
     <Dialog.Root
       role="dialog"
       placement="center"
-      size="xs"
       unmountOnExit={false}
       {...props}
+      size="xs"
       {...(isControlled && {
         open: trigger.open,
         onOpenChange: (e) => {
@@ -124,7 +110,13 @@ const ConfirmModal = ({ trigger, modalType = 'check', ...props }: ConfirmModalPr
                     {cancelText}
                   </Button>
                 </Dialog.ActionTrigger>
-                <Button flex={1} {...props.confirmButton?.buttonProps}>
+                <Button
+                  flex={1}
+                  {...props.confirmButton?.buttonProps}
+                  onClick={() => {
+                    props.confirmButton?.onConfirm?.()
+                  }}
+                >
                   {confirmText}
                 </Button>
               </ButtonGroup>

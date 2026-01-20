@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Button, VStack } from '@chakra-ui/react'
-import { LuCrown } from 'react-icons/lu'
+import { Button } from '@chakra-ui/react'
+import { LuCrown, LuSparkles, LuBell, LuSmile, LuAirplay } from 'react-icons/lu'
 import ContentModal from './ContentModal'
 
 const meta = {
@@ -19,17 +19,60 @@ const meta = {
   argTypes: {
     // Main
     title: {
-      description: '모달 제목입니다. string만 가능합니다.',
+      description: '모달 제목입니다. string만 가능합니다(링크, 아이콘, 뱃지 포함 불가❌)',
       table: { category: 'Main', type: { summary: 'string' } },
     },
     description: {
-      description: '제목 아래 설명 문구입니다. string만 가능합니다.',
+      description: '설명 문구입니다. string만 가능합니다(링크, 아이콘, 뱃지 포함 불가❌).',
       table: { category: 'Main', type: { summary: 'string' } },
     },
     buttons: {
-      description: '세로로 배치될 버튼 영역입니다.',
-      table: { category: 'Main', type: { summary: 'ReactNode' } },
+      description:
+        '세로로 배치될 버튼 영역입니다.<br/><br/>버튼 2개 이상일 때는 아래와 같은 형태 권장`[<Button key="first" />, <Button key="second" />]`',
+      table: { category: 'Main', type: { summary: 'ReactNode | ReactNode[]' } },
+      control: { type: 'radio' },
+      options: ['버튼 1개', '버튼 2개'],
+      mapping: {
+        '버튼 1개': [<Button key="primary">확인</Button>],
+        '버튼 2개': [
+          <Button key="primary">확인</Button>,
+          <Button key="secondary" colorPalette="gray" variant="outline">
+            취소
+          </Button>,
+        ],
+      },
+    },
+
+    // Visuals
+    icon: {
+      description: '상단에 표시할 아이콘을 선택합니다.',
+      table: { category: 'Visual', type: { summary: 'IconType' } },
+      control: { type: 'select' },
+      options: ['LuCrown', 'LuSparkles', 'LuBell', 'LuSmile', 'LuAirplay'],
+      mapping: {
+        LuCrown,
+        LuSparkles,
+        LuBell,
+        LuSmile,
+        LuAirplay
+      },
+    },
+
+    // Layout / Footer
+    modalContentProps: {
+      description: '모달 컨텐츠 영역 추가 props<br /><br />특수한 경우가 아니면 css는 건드리지 않습니다.',
+      table: { category: 'Layout', type: { summary: 'DialogContentProps' } },
       control: false,
+    },
+    footerDescription: {
+      description: '버튼 아래에 표시되는 설명 문구(링크, 아이콘, 뱃지 포함 가능✅)',
+      table: { category: 'Footer', type: { summary: 'string | ReactNode' } },
+      control: { type: 'radio' },
+      options: ['미지정', '기본 안내 문구'],
+      mapping: {
+        미지정: undefined,
+        '기본 안내 문구': '이 부분은 옵셔널이고, footer description 영역입니다.',
+      },
     },
 
     // Trigger
@@ -39,40 +82,17 @@ const meta = {
       table: { category: 'Trigger' },
       control: false,
     },
-
-    // Visuals
-    icon: {
-      description: '상단에 표시할 아이콘(기본: LuCrown)',
-      table: { category: 'Visual', type: { summary: 'IconType' } },
-      control: false,
-    },
-    colorPalette: {
-      description: '아이콘/버튼에 사용될 컬러 팔레트 (기본: blue)',
-      table: { category: 'Visual', type: { summary: 'ColorPalette' } },
-    },
-
-    // Layout / Footer
-    modalContentProps: {
-      description: '모달 컨텐츠 영역 추가 props',
-      table: { category: 'Layout', type: { summary: 'DialogContentProps' } },
-      control: false,
-    },
-    footerDescription: {
-      description: '버튼 아래에 표시되는 설명 문구',
-      table: { category: 'Footer', type: { summary: 'string | ReactNode' } },
-      control: false,
-    },
   },
   args: {
-    title: '어서오세요! 가입을 환영합니다 🎉',
-    description: '아래 버튼을 눌러 다음 단계를 진행해주세요.',
+    title: '이 부분은 title 영역입니다.',
+    description: '이 부분은 description 영역입니다.',
     trigger: {
       triggerButton: <Button colorPalette="blue">모달 열기</Button>,
     },
-    buttons: (<VStack w="full"><Button>시작하기</Button><Button colorPalette="gray" variant="outline">나중에 할게요</Button></VStack>),
-    footerDescription: '추후 설정에서 언제든 다시 진행할 수 있습니다.',
+    buttons: '버튼 1개',
+    footerDescription: '기본 안내 문구',
     icon: LuCrown,
-    colorPalette: 'blue',
+
   },
 } satisfies Meta<typeof ContentModal>
 

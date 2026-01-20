@@ -7,7 +7,7 @@ import type {
   DialogTriggerProps,
   UseDisclosureReturn,
 } from '@chakra-ui/react'
-import type { ReactNode } from 'react'
+import { Children, type ReactNode } from 'react'
 import type { IconType } from 'react-icons'
 import { LuCrown } from 'react-icons/lu'
 
@@ -29,29 +29,24 @@ type TriggerProps =
 type ContentModalProps = {
   title: string
   description?: string
-  buttons: ReactNode
+  buttons: ReactNode | ReactNode[]
   icon?: IconType
-  colorPalette?: ColorPalette
   modalContentProps?: DialogContentProps
   footerDescription?: string | ReactNode
   trigger: TriggerProps
 } & Omit<DialogRootProps, 'open' | 'children'>
 
-const ContentModal = ({
-  trigger,
-  colorPalette = 'blue',
-  icon = LuCrown,
-  ...props
-}: ContentModalProps) => {
+const ContentModal = ({ trigger, icon = LuCrown, ...props }: ContentModalProps) => {
   const isControlled = 'open' in trigger
+  const colorPalette = 'blue'
 
   return (
     <Dialog.Root
       role="dialog"
       placement="center"
-      size="sm"
       unmountOnExit={false}
       {...props}
+      size="sm"
       {...(isControlled && {
         open: trigger.open,
         onOpenChange: (e) => {
@@ -112,14 +107,13 @@ const ContentModal = ({
                 rowGap={3}
                 colorPalette={colorPalette}
                 css={{
-                  // 전달된 버튼이 래퍼(VStack 등)를 포함해도 전체 폭을 차지하도록 자손 버튼을 모두 대상으로 지정
                   '& button': {
                     width: '100%',
                     borderRadius: 'full',
                   },
                 }}
               >
-                {props.buttons}
+                {Children.toArray(props.buttons)}
               </ButtonGroup>
 
               {/* 버튼 아래 설명 */}
