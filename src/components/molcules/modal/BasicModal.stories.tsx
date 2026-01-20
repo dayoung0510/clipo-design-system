@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Button, Text as ChakraText } from '@chakra-ui/react'
+import React from 'react'
 import BasicModal from './BasicModal'
 
 const meta: Meta<typeof BasicModal> = {
@@ -43,6 +44,18 @@ const meta: Meta<typeof BasicModal> = {
       description: '푸터 영역 옵션입니다.', // disabled
       table: { category: 'Footer', disable: true },
     },
+    'footer.saveButton': {
+      name: 'footer > saveButton',
+      description: '저장 버튼 설정 (ReactNode 또는 ButtonProps 확장).',
+      table: {
+        category: 'Footer',
+        type: {
+          summary: 'ReactNode | ButtonProps & { label?: string; isHide?: boolean; onSave?: () => void }',
+        },
+        disable: true,
+      },
+      control: false,
+    },
     'footer.isHide': {
       name: 'footer > isHide',
       description: '푸터 영역을 완전히 숨길지 여부',
@@ -80,13 +93,27 @@ const meta: Meta<typeof BasicModal> = {
       table: { category: 'Footer', type: { summary: 'function' } },
       control: false,
     },
+    'footer.saveButton.node': {
+      name: '🟢 footer > saveButton > (custom node)',
+      description: '저장 버튼 위치에 직접 렌더할 ReactNode (일반적인 상황에서는 사용 비권장❌)',
+      table: { category: 'Footer', type: { summary: 'ReactNode' } },
+      control: false,
+    },
+    'footer.cancelButton': { // disabled
+      name: 'footer > cancelButton',
+      description: '취소 버튼 설정 (ReactNode 또는 ButtonProps 확장).',
+      table: { 
+        category: 'Footer',
+        disable: true,
+      },
+    },
     'footer.cancelButton.label': {
       name: '🟠 footer > cancelButton > label',
       description: '취소 버튼 라벨',
       table: { category: 'Footer', type: { summary: 'string' } },
       control: { type: 'text' },
     },
-    'confirmButton.onCancel': {
+    'footer.cancelButton.onCancel': {
       name: '🟠 footer > cancelButton > onCancel',
       description: '취소 버튼 클릭 핸들러',
       table: { category: 'Footer', type: { summary: '() => void' } },
@@ -98,6 +125,12 @@ const meta: Meta<typeof BasicModal> = {
       description: '취소 버튼 숨김 여부',
       table: { category: 'Footer', type: { summary: 'boolean' } },
       control: { type: 'boolean' },
+    },
+    'footer.cancelButton.node': {
+      name: '🟠 footer > cancelButton > (custom node)',
+      description: '취소 버튼 위치에 직접 렌더할 ReactNode (일반적인 상황에서는 사용 비권장❌)',
+      table: { category: 'Footer', type: { summary: 'ReactNode' } },
+      control: false,
     },
     size: {
       description: '모달 크기를 설정합니다.',
@@ -129,9 +162,11 @@ const meta: Meta<typeof BasicModal> = {
     'footer.saveButton.label': '저장',
     'footer.saveButton.isHide': false,
     'footer.saveButton.onSave': undefined,
+    'footer.saveButton.node': undefined,
     'footer.cancelButton.label': '취소',
     'footer.cancelButton.isHide': false,
     'footer.cancelButton.onCancel': undefined,
+    'footer.cancelButton.node': undefined,
     trigger: {
       triggerButton: <Button>모달 열기</Button>,
     },
@@ -146,21 +181,52 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   render: (args) => {
     const a = args as any
+    const baseSave = args.footer?.saveButton
+    const baseCancel = args.footer?.cancelButton
+
+    const customSaveNode = a['footer.saveButton.node']
+    const customCancelNode = a['footer.cancelButton.node']
+
+    const mergedSaveButton =
+      customSaveNode ??
+      (React.isValidElement(baseSave)
+        ? baseSave
+        : baseSave && typeof baseSave === 'object'
+          ? {
+              ...baseSave,
+              label: a['footer.saveButton.label'] ?? (baseSave as any)?.label,
+              isHide: a['footer.saveButton.isHide'] ?? (baseSave as any)?.isHide,
+              onSave: a['footer.saveButton.onSave'] ?? (baseSave as any)?.onSave,
+            }
+          : {
+              label: a['footer.saveButton.label'] ?? undefined,
+              isHide: a['footer.saveButton.isHide'] ?? false,
+              onSave: a['footer.saveButton.onSave'] ?? undefined,
+            })
+
+    const mergedCancelButton =
+      customCancelNode ??
+      (React.isValidElement(baseCancel)
+        ? baseCancel
+        : baseCancel && typeof baseCancel === 'object'
+          ? {
+              ...baseCancel,
+              label: a['footer.cancelButton.label'] ?? (baseCancel as any)?.label,
+              isHide: a['footer.cancelButton.isHide'] ?? (baseCancel as any)?.isHide,
+              onCancel: a['footer.cancelButton.onCancel'] ?? (baseCancel as any)?.onCancel,
+            }
+          : {
+              label: a['footer.cancelButton.label'] ?? undefined,
+              isHide: a['footer.cancelButton.isHide'] ?? false,
+              onCancel: a['footer.cancelButton.onCancel'] ?? undefined,
+            })
     const mergedFooter = {
       ...(args.footer ?? {}),
       isHide: a['footer.isHide'] ?? args.footer?.isHide,
       align: a['footer.align'] ?? args.footer?.align,
       description: a['footer.description'] ?? args.footer?.description,
-      saveButton: {
-        ...(args.footer?.saveButton ?? {}),
-        label: a['footer.saveButton.label'] ?? args.footer?.saveButton?.label,
-        isHide: a['footer.saveButton.isHide'] ?? args.footer?.saveButton?.isHide,
-      },
-      cancelButton: {
-        ...(args.footer?.cancelButton ?? {}),
-        label: a['footer.cancelButton.label'] ?? args.footer?.cancelButton?.label,
-        isHide: a['footer.cancelButton.isHide'] ?? args.footer?.cancelButton?.isHide,
-      },
+      saveButton: mergedSaveButton,
+      cancelButton: mergedCancelButton,
     }
 
     return <BasicModal {...args} footer={mergedFooter} />

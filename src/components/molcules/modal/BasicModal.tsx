@@ -25,12 +25,28 @@ type BasicModalProps = {
     isHide?: boolean
     align?: 'end' | 'between'
     description?: string | ReactNode
-    saveButton?: ButtonProps & { label?: string; isHide?: boolean; onSave?: () => void }
-    cancelButton?: ButtonProps & { label?: string; isHide?: boolean; onCancel?: () => void }
+    saveButton?:
+      | ReactNode
+      | (ButtonProps & { label?: string; isHide?: boolean; onSave?: () => void })
+    cancelButton?:
+      | ReactNode
+      | (ButtonProps & { label?: string; isHide?: boolean; onCancel?: () => void })
   }
   trigger: TriggerProps
   size?: 'sm' | 'md' | 'lg'
 } & Omit<DialogRootProps, 'open'>
+
+type CancelButtonConfig = ButtonProps & {
+  label?: string
+  isHide?: boolean
+  onCancel?: () => void
+}
+
+type SaveButtonConfig = ButtonProps & {
+  label?: string
+  isHide?: boolean
+  onSave?: () => void
+}
 
 const BasicModal = ({
   trigger,
@@ -46,6 +62,51 @@ const BasicModal = ({
   const titles = Array.isArray(props.title) ? props.title : [props.title]
   const ariaLabels = titles.join(' ')
   const testIdPrefix = titles.join(' ').replace(/\s+/g, '-').replace(/--+/g, '-').toLowerCase()
+
+  const renderCancelButton = () => {
+    if (!footer.cancelButton) return null
+    if (React.isValidElement(footer.cancelButton)) {
+      return footer.cancelButton
+    }
+    const cancelCfg = footer.cancelButton as CancelButtonConfig
+    if (cancelCfg.isHide) return null
+    return (
+      <Dialog.ActionTrigger
+        asChild={!cancelCfg.onCancel} // onCancel 없으면 기본 닫기 동작
+        onClick={() => {
+          cancelCfg.onCancel?.()
+        }}
+      >
+        <Button
+          variant="outline"
+          data-testid={`${testIdPrefix}-modal-cancel-button`}
+          {...cancelCfg}
+        >
+          {cancelCfg.label || '취소'}
+        </Button>
+      </Dialog.ActionTrigger>
+    )
+  }
+
+  const renderSaveButton = () => {
+    if (!footer.saveButton) return null
+    if (React.isValidElement(footer.saveButton)) {
+      return footer.saveButton
+    }
+    const saveCfg = footer.saveButton as SaveButtonConfig
+    if (saveCfg.isHide) return null
+    return (
+      <Button
+        data-testid={`${testIdPrefix}-modal-save-button`}
+        {...saveCfg}
+        onClick={() => {
+          saveCfg.onSave?.()
+        }}
+      >
+        {saveCfg.label || '저장'}
+      </Button>
+    )
+  }
 
   return (
     <Dialog.Root
@@ -114,33 +175,8 @@ const BasicModal = ({
                     <Spacer />
                   </React.Fragment>
                 )}
-                {!footer.cancelButton?.isHide && (
-                  <Dialog.ActionTrigger
-                    asChild={!footer.cancelButton?.onCancel} // onCancel이 없으면 모달닫기 동작
-                    onClick={() => {
-                      footer.cancelButton?.onCancel?.()
-                    }}
-                  >
-                    <Button
-                      variant="outline"
-                      data-testid={`${testIdPrefix}-modal-cancel-button`}
-                      {...footer.cancelButton}
-                    >
-                      {footer.cancelButton?.label || '취소'}
-                    </Button>
-                  </Dialog.ActionTrigger>
-                )}
-                {!footer.saveButton?.isHide && (
-                  <Button
-                    data-testid={`${testIdPrefix}-modal-save-button`}
-                    {...footer.saveButton}
-                    onClick={() => {
-                      footer.saveButton?.onSave?.()
-                    }}
-                  >
-                    {footer.saveButton?.label || '저장'}
-                  </Button>
-                )}
+                {renderCancelButton()}
+                {renderSaveButton()}
               </Dialog.Footer>
             )}
           </Dialog.Content>
