@@ -44,7 +44,7 @@ const meta = {
     },
 
     // Visuals
-    icon: {
+    customIcon: {
       description: '상단에 표시할 아이콘을 선택합니다.',
       table: { category: 'Main', type: { summary: 'IconType' } },
       control: { type: 'select' },
@@ -96,7 +96,7 @@ const meta = {
     },
     buttons: '버튼 1개',
     footerDescription: '기본 안내 문구',
-    icon: LuCrown,
+    customIcon: LuCrown,
 
   },
 } satisfies Meta<typeof StatusModal>

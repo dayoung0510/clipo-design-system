@@ -1,7 +1,6 @@
 import { CloseButton } from '../../atoms/close-button/close-button'
 import { ButtonGroup, Center, Dialog, Icon, Portal, Text, VStack } from '@chakra-ui/react'
 import type {
-  ColorPalette,
   DialogContentProps,
   DialogRootProps,
   DialogTriggerProps,
@@ -30,13 +29,13 @@ type StatusModalProps = {
   title: string
   description?: string
   buttons: ReactNode | ReactNode[]
-  icon?: IconType
+  customIcon?: IconType
   modalContentProps?: DialogContentProps
   footerDescription?: string | ReactNode
   trigger: TriggerProps
 } & Omit<DialogRootProps, 'open' | 'children'>
 
-const StatusModal = ({ trigger, icon = LuCrown, ...props }: StatusModalProps) => {
+const StatusModal = ({ trigger, customIcon = LuCrown, ...props }: StatusModalProps) => {
   const isControlled = 'open' in trigger
   const colorPalette = 'blue'
 
@@ -79,10 +78,10 @@ const StatusModal = ({ trigger, icon = LuCrown, ...props }: StatusModalProps) =>
                 borderWidth="6px"
                 borderColor={`${colorPalette}.subtle`}
                 borderRadius="full"
-                w="68px"
-                h="68px"
+                w="60px"
+                h="60px"
               >
-                <Icon as={icon} boxSize={5} color={`${colorPalette}.contrast`} />
+                <Icon as={customIcon} boxSize={5} color={`${colorPalette}.contrast`} />
               </Center>
 
               <VStack w="full" rowGap={3} maxH="60dvh" overflow="auto">
