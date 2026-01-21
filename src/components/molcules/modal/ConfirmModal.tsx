@@ -35,7 +35,7 @@ type BaseConfirmModalProps = {
   customIcon?: IconType
   title: string
   description?: string
-  cancelButton?: { label?: string; buttonProps?: ButtonProps }
+  cancelButton?: { label?: string; onCancel?: () => void; buttonProps?: ButtonProps }
   confirmButton?: { label?: string; onConfirm?: () => void; buttonProps?: ButtonProps }
   modalContentProps?: DialogContentProps
   footerDescription?: string | ReactNode
@@ -53,8 +53,32 @@ const ConfirmModal = ({ trigger, modalType = 'positive', ...props }: BaseConfirm
   const colorPalette = iconColorSet[modalType].colorPalette
   const icon = props.customIcon ?? iconColorSet[modalType].icon
 
-  const cancelText = props.cancelButton?.label ?? '아니오'
-  const confirmText = props.confirmButton?.label ?? '네'
+  const cancelText = props.cancelButton?.label ?? '취소'
+  const confirmText = props.confirmButton?.label ?? '확인'
+
+  const renderCancelButton = () => {
+    // onCancel이 있으면 수동 처리(닫기 없음), 없으면 기본 닫힘 트리거
+    if (props.cancelButton?.onCancel) {
+      return (
+        <Button
+          variant="outline"
+          flex={1}
+          {...props.cancelButton?.buttonProps}
+          onClick={() => props.cancelButton?.onCancel?.()}
+        >
+          {cancelText}
+        </Button>
+      )
+    }
+
+    return (
+      <Dialog.ActionTrigger asChild>
+        <Button variant="outline" flex={1} {...props.cancelButton?.buttonProps}>
+          {cancelText}
+        </Button>
+      </Dialog.ActionTrigger>
+    )
+  }
 
   return (
     <Dialog.Root
@@ -103,13 +127,11 @@ const ConfirmModal = ({ trigger, modalType = 'positive', ...props }: BaseConfirm
                 )}
               </VStack>
 
-              {/* 하단버튼 */}
               <ButtonGroup w="full" columnGap={3} colorPalette={colorPalette}>
-                <Dialog.ActionTrigger asChild>
-                  <Button variant="outline" flex={1} {...props.cancelButton?.buttonProps}>
-                    {cancelText}
-                  </Button>
-                </Dialog.ActionTrigger>
+                {/* 취소버튼 */}
+                {renderCancelButton()}
+
+                {/* 확인버튼 */}
                 <Button
                   flex={1}
                   {...props.confirmButton?.buttonProps}

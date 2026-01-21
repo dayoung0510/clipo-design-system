@@ -116,7 +116,7 @@ const meta: Meta<typeof BasicModal> = {
     },
     'footer.cancelButton.onCancel': {
       name: '🟠 footer > cancelButton > onCancel',
-      description: '취소 버튼 클릭 핸들러',
+      description: '취소 버튼 클릭 핸들러(넘기지 않을 경우에는 기본 닫힘 트리거 적용)',
       table: { category: 'Footer', type: { summary: '() => void' } },
       control: false,
       action: 'onCancel',

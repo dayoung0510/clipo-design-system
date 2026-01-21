@@ -97,6 +97,13 @@ const meta = {
       table: { category: 'Footer', type: { summary: 'ButtonProps' } },
       control: false,
     },
+    'confirmButton.onCancel': {
+      name: '🟠 cancelButton > onCancel',
+      description: '취소 버튼 클릭 핸들러(넘기지 않을 경우에는 기본 닫힘 트리거 적용)',
+      table: { category: 'Footer', type: { summary: '() => void' } },
+      control: false,
+      action: 'onConfirm',
+    },
     footerDescription: {
       name: '🟡 footerDescription',
       description:
@@ -134,6 +141,7 @@ const meta = {
     'confirmButton.buttonProps': undefined,
     cancelButton: { label: '취소' },
     'cancelButton.label': '취소',
+    'cancelButton.onCancel': undefined,
     'cancelButton.buttonProps': undefined,
     footerDescription: '안내 문구',
   } as any,
@@ -155,6 +163,7 @@ export const Default: Story = {
     const mergedCancelButton = {
       ...(args.cancelButton ?? {}),
       label: a['cancelButton.label'] ?? args.cancelButton?.label,
+      onCancel: a['cancelButton.onCancel'] ?? args.cancelButton?.onCancel,
       buttonProps: a['cancelButton.buttonProps'] ?? args.cancelButton?.buttonProps,
     }
 
