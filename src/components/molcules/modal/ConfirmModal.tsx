@@ -35,7 +35,7 @@ type BaseConfirmModalProps = {
   customIcon?: IconType
   title: string
   description?: string
-  cancelButton?: { label?: string; onCancel?: () => void; buttonProps?: ButtonProps }
+  cancelButton?: { label?: string; buttonProps?: ButtonProps }
   confirmButton?: { label?: string; onConfirm?: () => void; buttonProps?: ButtonProps }
   customButtons?: ReactNode[]
   modalContentProps?: DialogContentProps
@@ -56,30 +56,6 @@ const ConfirmModal = ({ trigger, modalType = 'positive', ...props }: BaseConfirm
 
   const cancelText = props.cancelButton?.label ?? '취소'
   const confirmText = props.confirmButton?.label ?? '확인'
-
-  const renderCancelButton = () => {
-    // onCancel이 있으면 수동 처리(닫기 없음), 없으면 기본 닫힘 트리거
-    if (props.cancelButton?.onCancel) {
-      return (
-        <Button
-          variant="outline"
-          flex={1}
-          {...props.cancelButton?.buttonProps}
-          onClick={() => props.cancelButton?.onCancel?.()}
-        >
-          {cancelText}
-        </Button>
-      )
-    }
-
-    return (
-      <Dialog.ActionTrigger asChild>
-        <Button variant="outline" flex={1} {...props.cancelButton?.buttonProps}>
-          {cancelText}
-        </Button>
-      </Dialog.ActionTrigger>
-    )
-  }
 
   return (
     <Dialog.Root
@@ -136,7 +112,11 @@ const ConfirmModal = ({ trigger, modalType = 'positive', ...props }: BaseConfirm
               {!(props.customButtons ?? []).length && (
                 <ButtonGroup w="full" columnGap={3} colorPalette={colorPalette}>
                   {/* 취소버튼 */}
-                  {renderCancelButton()}
+                  <Dialog.ActionTrigger asChild>
+                    <Button variant="outline" flex={1} {...props.cancelButton?.buttonProps}>
+                      {cancelText}
+                    </Button>
+                  </Dialog.ActionTrigger>
 
                   {/* 확인버튼 */}
                   <Button

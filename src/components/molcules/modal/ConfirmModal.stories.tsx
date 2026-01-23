@@ -97,16 +97,9 @@ const meta = {
       table: { category: 'Footer', type: { summary: 'ButtonProps' } },
       control: false,
     },
-    'cancelButton.onCancel': {
-      name: '🟠 cancelButton > onCancel',
-      description: '취소 버튼 클릭 핸들러(넘기지 않을 경우에는 기본 닫힘 트리거 적용)',
-      table: { category: 'Footer', type: { summary: '() => void' } },
-      control: false,
-      action: 'onConfirm',
-    },
     customButtons: {
       name:'🟣 customButtons',
-      description: '커스텀 버튼들을 넘겨주는 경우(특수한 경우가 아니라면 사용하지 않습니다❌)<br /><br />colorPalette는 자동으로 적용됩니다.<br />버튼들을 배열에 담아 넘겨줍니다.<br />`[<Button key="first> />, <Button key="second" />]`',
+      description: '커스텀 버튼들을 넘겨주는 경우(일반적인 경우에는 사용하지 않습니다❌)<br /><br />colorPalette는 자동으로 적용됩니다.<br />버튼들을 배열에 담아 넘겨줍니다.<br />`[<Button key="first> />, <Button key="second" />]`',
       table: { category: 'Footer', type: { summary: 'ReactNode[]' } },
       control: false,
     },
@@ -147,7 +140,6 @@ const meta = {
     'confirmButton.buttonProps': undefined,
     cancelButton: { label: '취소' },
     'cancelButton.label': '취소',
-    'cancelButton.onCancel': undefined,
     'cancelButton.buttonProps': undefined,
     customButtons: undefined,
     footerDescription: '안내 문구',
@@ -170,7 +162,6 @@ export const Default: Story = {
     const mergedCancelButton = {
       ...(args.cancelButton ?? {}),
       label: a['cancelButton.label'] ?? args.cancelButton?.label,
-      onCancel: a['cancelButton.onCancel'] ?? args.cancelButton?.onCancel,
       buttonProps: a['cancelButton.buttonProps'] ?? args.cancelButton?.buttonProps,
     }
 
