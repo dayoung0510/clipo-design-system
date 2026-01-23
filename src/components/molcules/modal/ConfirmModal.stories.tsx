@@ -97,12 +97,18 @@ const meta = {
       table: { category: 'Footer', type: { summary: 'ButtonProps' } },
       control: false,
     },
-    'confirmButton.onCancel': {
+    'cancelButton.onCancel': {
       name: '🟠 cancelButton > onCancel',
       description: '취소 버튼 클릭 핸들러(넘기지 않을 경우에는 기본 닫힘 트리거 적용)',
       table: { category: 'Footer', type: { summary: '() => void' } },
       control: false,
       action: 'onConfirm',
+    },
+    customButtons: {
+      name:'🟣 customButtons',
+      description: '커스텀 버튼들을 넘겨주는 경우(특수한 경우가 아니라면 사용하지 않습니다❌)<br /><br />colorPalette는 자동으로 적용됩니다.<br />버튼들을 배열에 담아 넘겨줍니다.<br />`[<Button key="first> />, <Button key="second" />]`',
+      table: { category: 'Footer', type: { summary: 'ReactNode[]' } },
+      control: false,
     },
     footerDescription: {
       name: '🟡 footerDescription',
@@ -117,7 +123,7 @@ const meta = {
       },
     },
     modalContentProps: {
-      description: '모달 컨텐츠 영역의 추가 props<br /><br />특수한 경우가 아니면 css는 건드리지 않습니다.',
+      description: '모달 컨텐츠 영역의 추가 props<br /><br />특수한 경우가 아니면 css는 건드리지 않습니다❌',
       table: { category: 'Layout', type: { summary: 'DialogContentProps' } },
       control: false,
     },
@@ -143,6 +149,7 @@ const meta = {
     'cancelButton.label': '취소',
     'cancelButton.onCancel': undefined,
     'cancelButton.buttonProps': undefined,
+    customButtons: undefined,
     footerDescription: '안내 문구',
   } as any,
 } satisfies Meta<typeof ConfirmModal>

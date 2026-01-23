@@ -7,7 +7,7 @@ import type {
   DialogTriggerProps,
   UseDisclosureReturn,
 } from '@chakra-ui/react'
-import type { ReactNode } from 'react'
+import { Children, type ReactNode } from 'react'
 import type { IconType } from 'react-icons'
 import { LuCircleCheckBig, LuTrash2 } from 'react-icons/lu'
 
@@ -37,6 +37,7 @@ type BaseConfirmModalProps = {
   description?: string
   cancelButton?: { label?: string; onCancel?: () => void; buttonProps?: ButtonProps }
   confirmButton?: { label?: string; onConfirm?: () => void; buttonProps?: ButtonProps }
+  customButtons?: ReactNode[]
   modalContentProps?: DialogContentProps
   footerDescription?: string | ReactNode
   trigger: TriggerProps
@@ -127,21 +128,40 @@ const ConfirmModal = ({ trigger, modalType = 'positive', ...props }: BaseConfirm
                 )}
               </VStack>
 
-              <ButtonGroup w="full" columnGap={3} colorPalette={colorPalette}>
-                {/* 취소버튼 */}
-                {renderCancelButton()}
+              {/**
+               *
+               * 버튼영역
+               *
+               */}
+              {!(props.customButtons ?? []).length && (
+                <ButtonGroup w="full" columnGap={3} colorPalette={colorPalette}>
+                  {/* 취소버튼 */}
+                  {renderCancelButton()}
 
-                {/* 확인버튼 */}
-                <Button
-                  flex={1}
-                  {...props.confirmButton?.buttonProps}
-                  onClick={() => {
-                    props.confirmButton?.onConfirm?.()
-                  }}
+                  {/* 확인버튼 */}
+                  <Button
+                    flex={1}
+                    {...props.confirmButton?.buttonProps}
+                    onClick={() => {
+                      props.confirmButton?.onConfirm?.()
+                    }}
+                  >
+                    {confirmText}
+                  </Button>
+                </ButtonGroup>
+              )}
+
+              {/* 커스텀 버튼들을 넘겨받은 경우 */}
+              {!!(props.customButtons ?? []).length && (
+                <ButtonGroup
+                  w="full"
+                  columnGap={3}
+                  colorPalette={colorPalette}
+                  css={{ '& button': { flex: 1 } }}
                 >
-                  {confirmText}
-                </Button>
-              </ButtonGroup>
+                  {Children.toArray(props.customButtons)}
+                </ButtonGroup>
+              )}
 
               {/* 버튼 아래 설명 */}
               {props.footerDescription &&

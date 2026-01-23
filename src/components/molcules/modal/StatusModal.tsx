@@ -107,7 +107,7 @@ const StatusModal = ({ trigger, customIcon = LuCrown, ...props }: StatusModalPro
                 colorPalette={colorPalette}
                 css={{
                   '& button': {
-                    width: '100%',
+                    flex: 1,
                     borderRadius: 'full',
                   },
                 }}
