@@ -97,6 +97,12 @@ const meta: Meta<typeof BasicModal> = {
       table: { category: "Footer", type: { summary: "function" } },
       control: false,
     },
+    "footer.saveButton.buttonProps": {
+      name: "🟢 footer > saveButton > buttonProps",
+      description: "저장 버튼 버튼 옵션",
+      table: { category: "Footer", type: { summary: "ButtonProps" } },
+      control: false,
+    },
     "footer.saveButton.node": {
       name: "🟢 footer > saveButton > (custom node)",
       description:
@@ -133,6 +139,12 @@ const meta: Meta<typeof BasicModal> = {
       table: { category: "Footer", type: { summary: "boolean" } },
       control: { type: "boolean" },
     },
+    "footer.cancelButton.buttonProps": {
+      name: "🟠 footer > cancelButton > buttonProps",
+      description: "취소 버튼 버튼 옵션",
+      table: { category: "Footer", type: { summary: "ButtonProps" } },
+      control: false,
+    },
     "footer.cancelButton.node": {
       name: "🟠 footer > cancelButton > (custom node)",
       description:
@@ -159,6 +171,12 @@ const meta: Meta<typeof BasicModal> = {
       description: "커스텀 버튼 숨김 여부",
       table: { category: "Footer", type: { summary: "boolean" } },
       control: { type: "boolean" },
+    },
+    "footer.customButton.buttonProps": {
+      name: "🟣 footer > customButton > buttonProps",
+      description: "커스텀 버튼 버튼 옵션",
+      table: { category: "Footer", type: { summary: "ButtonProps" } },
+      control: false,
     },
     "footer.customButton": {
       name: "🟣 footer > customButton > (custom node)",
@@ -207,6 +225,7 @@ const meta: Meta<typeof BasicModal> = {
     "footer.saveButton.label": "저장",
     "footer.saveButton.isHidden": false,
     "footer.saveButton.onSave": undefined,
+    "footer.saveButton.buttonProps": {},
     "footer.saveButton.node": undefined,
     "footer.cancelButton.label": "취소",
     "footer.cancelButton.isHidden": false,

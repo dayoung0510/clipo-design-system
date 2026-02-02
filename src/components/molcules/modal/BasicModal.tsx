@@ -27,12 +27,14 @@ type BasicModalProps = {
     description?: string | ReactNode;
     saveButton?:
       | ReactNode
-      | (ButtonProps & {
+      | {
           label?: string;
+          buttonProps?: ButtonProps;
           isHidden?: boolean;
           onSave?: () => void;
-        });
+        };
     cancelButton?: ButtonProps & { label?: string; isHidden?: boolean };
+    // 커스텀버튼이 존재할 경우에는 취소버튼 렌더링하지 않음
     customButton?:
       | ReactNode
       | (ButtonProps & {
@@ -45,22 +47,24 @@ type BasicModalProps = {
   size?: "sm" | "md" | "lg";
 } & Omit<DialogRootProps, "open">;
 
-type CancelButtonConfig = ButtonProps & {
+type CancelButtonConfig = {
   label?: string;
   isHidden?: boolean;
   onCancel?: () => void;
+  buttonProps?: ButtonProps;
 };
 
-type SaveButtonConfig = ButtonProps & {
+type SaveButtonConfig = {
   label?: string;
   isHidden?: boolean;
   onSave?: () => void;
+  buttonProps?: ButtonProps;
 };
 
-type CustomButtonConfig = ButtonProps & {
+type CustomButtonConfig = {
   label?: string;
   isHidden?: boolean;
-  onClick?: () => void;
+  buttonProps?: ButtonProps;
 };
 
 const BasicModal = ({
@@ -93,29 +97,31 @@ const BasicModal = ({
 
     // onCancel이 있으면 수동 처리(닫기 없음), 없으면 기본 닫힘 트리거
     if (cancelCfg.onCancel) {
-      const { onCancel, ...rest } = cancelCfg;
+      const { onCancel, label, isHidden, ...rest } = cancelCfg;
       return (
         <Button
           variant="outline"
-          hidden={cancelCfg.isHidden}
+          hidden={isHidden}
           data-testid={`${testIdPrefix}-modal-cancel-button`}
           onClick={() => onCancel()}
           {...rest}
         >
-          {cancelCfg.label || "취소"}
+          {label || "취소"}
         </Button>
       );
     }
+
+    const { label, isHidden, onCancel: _ignoredOnCancel, ...rest } = cancelCfg;
 
     return (
       <Dialog.ActionTrigger asChild>
         <Button
           variant="outline"
-          hidden={cancelCfg.isHidden}
+          hidden={isHidden}
           data-testid={`${testIdPrefix}-modal-cancel-button`}
-          {...cancelCfg}
+          {...rest}
         >
-          {cancelCfg.label || "취소"}
+          {label || "취소"}
         </Button>
       </Dialog.ActionTrigger>
     );
@@ -131,17 +137,19 @@ const BasicModal = ({
         ? (footer.saveButton as SaveButtonConfig)
         : {};
 
+    const { onSave, label, isHidden, ...rest } = saveCfg;
+
     return (
       <Button
         data-testid={`${testIdPrefix}-modal-save-button`}
-        {...saveCfg}
-        hidden={saveCfg.isHidden}
+        {...rest}
+        hidden={isHidden}
         onClick={(e) => {
-          saveCfg.onSave?.();
-          saveCfg.onClick?.(e);
+          onSave?.();
+          rest.buttonProps?.onClick?.(e);
         }}
       >
-        {saveCfg.label || "저장"}
+        {label || "저장"}
       </Button>
     );
   };
@@ -157,13 +165,15 @@ const BasicModal = ({
         ? (footer.customButton as CustomButtonConfig)
         : {};
 
+    const { label, isHidden, ...rest } = customCfg;
+
     return (
       <Button
-        hidden={customCfg.isHidden}
+        hidden={isHidden}
         data-testid={`${testIdPrefix}-modal-cancel-button`}
-        {...customCfg}
+        {...rest}
       >
-        {customCfg.label || "취소"}
+        {label || "취소"}
       </Button>
     );
   };
