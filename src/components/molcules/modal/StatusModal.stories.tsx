@@ -1,40 +1,54 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { Button, HStack, Icon } from '@chakra-ui/react'
-import { LuCrown, LuSparkles, LuBell, LuSmile, LuAirplay, LuInfo } from 'react-icons/lu'
-import StatusModal from './StatusModal'
+import type { Meta, StoryObj } from "@storybook/react";
+import { Button, HStack, Icon } from "@chakra-ui/react";
+import {
+  LuCrown,
+  LuSparkles,
+  LuBell,
+  LuSmile,
+  LuAirplay,
+  LuInfo,
+} from "react-icons/lu";
+import StatusModal from "./StatusModal";
 
 const meta = {
-  title: 'Molcules/Modal/StatusModal',
+  title: "Molcules/Modal/StatusModal",
   component: StatusModal,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
     docs: {
       description: {
         component:
-          '특성: 상단에 아이콘, 하단 버튼이 세로방향 full size로 배치됨<br/>의미: 가입 인사 같은 가벼운 안내 콘텐츠에 사용',
+          "특성: 상단에 아이콘, 하단 버튼이 세로방향 full size로 배치됨<br/>의미: 가입 인사 같은 가벼운 안내 콘텐츠에 사용",
       },
     },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     // Main
     title: {
-      description: '모달 제목입니다. string만 가능합니다(링크, 아이콘, 뱃지 포함 불가❌)',
-      table: { category: 'Main', type: { summary: 'string' } },
+      description:
+        "모달 제목입니다. string만 가능합니다(링크, 아이콘, 뱃지 포함 불가❌)",
+      table: { category: "Main", type: { summary: "string" } },
     },
     description: {
-      description: '설명 문구입니다. string만 가능합니다(링크, 아이콘, 뱃지 포함 불가❌).',
-      table: { category: 'Main', type: { summary: 'string' } },
+      description:
+        "설명 문구입니다.<br/> 텍스트는 string만 가능합니다(링크, 아이콘, 뱃지 포함 불가❌).<br /><br />본문 내용에 highlight 텍스트가 필요한 경우에는 { text: string; highlight?: string | string[] } 형태로 전달합니다.",
+      table: {
+        category: "Main",
+        type: {
+          summary: "string | { text: string; highlight?: string | string[] }",
+        },
+      },
     },
     buttons: {
       description:
         '세로로 배치될 버튼 영역입니다.<br/><br/>버튼 2개 이상일 때는 아래와 같은 형태 권장`[<Button key="first" />, <Button key="second" />]`',
-      table: { category: 'Main', type: { summary: 'ReactNode | ReactNode[]' } },
-      control: { type: 'radio' },
-      options: ['버튼 1개', '버튼 2개'],
+      table: { category: "Main", type: { summary: "ReactNode | ReactNode[]" } },
+      control: { type: "radio" },
+      options: ["버튼 1개", "버튼 2개"],
       mapping: {
-        '버튼 1개': [<Button key="primary">확인</Button>],
-        '버튼 2개': [
+        "버튼 1개": [<Button key="primary">확인</Button>],
+        "버튼 2개": [
           <Button key="primary">확인</Button>,
           <Button key="secondary" colorPalette="gray" variant="outline">
             취소
@@ -45,66 +59,72 @@ const meta = {
 
     // Visuals
     customIcon: {
-      description: '상단에 표시할 아이콘을 선택합니다.',
-      table: { category: 'Main', type: { summary: 'IconType' } },
-      control: { type: 'select' },
-      options: ['LuCrown', 'LuSparkles', 'LuBell', 'LuSmile', 'LuAirplay'],
+      description: "상단에 표시할 아이콘을 선택합니다.",
+      table: { category: "Main", type: { summary: "IconType" } },
+      control: { type: "select" },
+      options: ["LuCrown", "LuSparkles", "LuBell", "LuSmile", "LuAirplay"],
       mapping: {
         LuCrown,
         LuSparkles,
         LuBell,
         LuSmile,
-        LuAirplay
+        LuAirplay,
       },
     },
 
     // Layout / Footer
     modalContentProps: {
-      description: '모달 컨텐츠 영역 추가 props<br /><br />특수한 경우가 아니면 css는 건드리지 않습니다.',
-      table: { category: 'Layout', type: { summary: 'DialogContentProps' } },
+      description:
+        "모달 컨텐츠 영역 추가 props<br /><br />특수한 경우가 아니면 css는 건드리지 않습니다.",
+      table: { category: "Layout", type: { summary: "DialogContentProps" } },
       control: false,
     },
     footerDescription: {
-      description: '버튼 아래에 표시되는 설명 문구(링크, 아이콘, 뱃지 포함 가능✅)',
-      table: { category: 'Footer', type: { summary: 'string | ReactNode' } },
-      control: { type: 'radio' },
-      options: ['미지정', '기본 안내 문구'],
+      description:
+        "버튼 아래에 표시되는 설명 문구(링크, 아이콘, 뱃지 포함 가능✅)",
+      table: { category: "Footer", type: { summary: "string | ReactNode" } },
+      control: { type: "radio" },
+      options: ["미지정", "기본 안내 문구"],
       mapping: {
         미지정: undefined,
-        '기본 안내 문구': <HStack><Icon as={LuInfo} />이 부분은 옵셔널이고, footer description 영역입니다.</HStack>,
+        "기본 안내 문구": (
+          <HStack>
+            <Icon as={LuInfo} />이 부분은 옵셔널이고, footer description
+            영역입니다.
+          </HStack>
+        ),
       },
     },
-    closeOnInteractOutside : {
-      description: '모달 바깥영역 클릭 시 모달 닫기 여부',
-      table: { category: 'Layout', type: { summary: 'boolean' } },
-      control: { type: 'boolean' },
+    closeOnInteractOutside: {
+      description: "모달 바깥영역 클릭 시 모달 닫기 여부",
+      table: { category: "Layout", type: { summary: "boolean" } },
+      control: { type: "boolean" },
     },
 
     // Trigger
     trigger: {
       description:
-        '모달을 여는 방식을 설정합니다.<br/><br/>1) 비제어형: { triggerButton, triggerProps }<br/>2) 제어형(open/setOpen): { open, setOpen }<br/>3) 제어형(onOpen/onClose): { open, onOpen, onClose }',
-      table: { category: 'Trigger' },
+        "모달을 여는 방식을 설정합니다.<br/><br/>1) 비제어형: { triggerButton, triggerProps }<br/>2) 제어형(open/setOpen): { open, setOpen }<br/>3) 제어형(onOpen/onClose): { open, onOpen, onClose }",
+      table: { category: "Trigger" },
       control: false,
     },
   },
   args: {
-    title: '이 부분은 title 영역입니다.',
-    description: '이 부분은 description 영역입니다.',
+    title: "이 부분은 title 영역입니다.",
+    description: "이 부분은 description 영역입니다.",
     trigger: {
       triggerButton: <Button colorPalette="blue">모달 열기</Button>,
     },
-    buttons: '버튼 1개',
-    footerDescription: '기본 안내 문구',
+    buttons: "버튼 1개",
+    footerDescription: "기본 안내 문구",
     customIcon: LuCrown,
-
   },
-} satisfies Meta<typeof StatusModal>
+} satisfies Meta<typeof StatusModal>;
 
-export default meta
+export default meta;
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: (args) => <StatusModal {...args} />,
-}
+};

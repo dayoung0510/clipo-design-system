@@ -7,6 +7,7 @@ import {
   Portal,
   Text,
   VStack,
+  Highlight,
 } from "@chakra-ui/react";
 import type {
   ButtonProps,
@@ -15,7 +16,11 @@ import type {
   DialogTriggerProps,
   UseDisclosureReturn,
 } from "@chakra-ui/react";
-import { Children, type ReactNode } from "react";
+import {
+  Children,
+  type ReactNode,
+  type MouseEvent as ReactMouseEvent,
+} from "react";
 import type { IconType } from "react-icons";
 import { LuCircleCheckBig, LuTrash2 } from "react-icons/lu";
 
@@ -41,11 +46,11 @@ type BaseConfirmModalProps = {
   modalType?: "positive" | "negative";
   customIcon?: IconType;
   title: string;
-  description?: string;
+  description?: string | { text: string; highlight?: string | string[] };
   cancelButton?: { label?: string; buttonProps?: ButtonProps };
   confirmButton?: {
     label?: string;
-    onConfirm?: () => void;
+    onConfirm?: (event?: ReactMouseEvent<HTMLButtonElement>) => void;
     buttonProps?: ButtonProps;
   };
   customButtons?: ReactNode[];
@@ -71,12 +76,22 @@ const ConfirmModal = ({
 
   const cancelText = props.cancelButton?.label ?? "취소";
   const confirmText = props.confirmButton?.label ?? "확인";
+  const descriptionText =
+    typeof props.description === "string"
+      ? props.description
+      : props.description?.text;
+  const highlightQueries =
+    typeof props.description === "object" && props.description?.highlight
+      ? Array.isArray(props.description.highlight)
+        ? props.description.highlight
+        : [props.description.highlight]
+      : [];
 
   return (
     <Dialog.Root
       role="dialog"
       placement="center"
-      unmountOnExit={false}
+      unmountOnExit={true}
       {...props}
       size="xs"
       {...(isControlled && {
@@ -116,13 +131,22 @@ const ConfirmModal = ({
                 </Text>
 
                 {/* 설명 */}
-                {props.description && (
+                {descriptionText && (
                   <Text
                     textStyle="b2-regular"
                     textAlign="center"
                     whiteSpace="pre-wrap"
                   >
-                    {props.description}
+                    {highlightQueries.length ? (
+                      <Highlight
+                        query={highlightQueries}
+                        styles={{ color: `${colorPalette}.solid` }}
+                      >
+                        {descriptionText}
+                      </Highlight>
+                    ) : (
+                      descriptionText
+                    )}
                   </Text>
                 )}
               </VStack>
@@ -149,8 +173,8 @@ const ConfirmModal = ({
                   <Button
                     flex={1}
                     {...props.confirmButton?.buttonProps}
-                    onClick={() => {
-                      props.confirmButton?.onConfirm?.();
+                    onClick={(event) => {
+                      props.confirmButton?.onConfirm?.(event);
                     }}
                   >
                     {confirmText}

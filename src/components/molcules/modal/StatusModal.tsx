@@ -1,14 +1,23 @@
-import { CloseButton } from '../../atoms/close-button/close-button'
-import { ButtonGroup, Center, Dialog, Icon, Portal, Text, VStack } from '@chakra-ui/react'
+import { CloseButton } from "../../atoms/close-button/close-button";
+import {
+  ButtonGroup,
+  Center,
+  Dialog,
+  Icon,
+  Portal,
+  Text,
+  VStack,
+  Highlight,
+} from "@chakra-ui/react";
 import type {
   DialogContentProps,
   DialogRootProps,
   DialogTriggerProps,
   UseDisclosureReturn,
-} from '@chakra-ui/react'
-import { Children, type ReactNode } from 'react'
-import type { IconType } from 'react-icons'
-import { LuCrown } from 'react-icons/lu'
+} from "@chakra-ui/react";
+import { Children, type ReactNode } from "react";
+import type { IconType } from "react-icons";
+import { LuCrown } from "react-icons/lu";
 
 /**
  *
@@ -19,25 +28,39 @@ import { LuCrown } from 'react-icons/lu'
 
 type TriggerProps =
   | {
-      triggerProps?: DialogTriggerProps
-      triggerButton: ReactNode
+      triggerProps?: DialogTriggerProps;
+      triggerButton: ReactNode;
     }
-  | Pick<UseDisclosureReturn, 'open' | 'setOpen'>
-  | Pick<UseDisclosureReturn, 'open' | 'onClose' | 'onOpen'>
+  | Pick<UseDisclosureReturn, "open" | "setOpen">
+  | Pick<UseDisclosureReturn, "open" | "onClose" | "onOpen">;
 
 type StatusModalProps = {
-  title: string
-  description?: string
-  buttons: ReactNode | ReactNode[]
-  customIcon?: IconType
-  modalContentProps?: DialogContentProps
-  footerDescription?: string | ReactNode
-  trigger: TriggerProps
-} & Omit<DialogRootProps, 'open' | 'children'>
+  title: string;
+  description?: string | { text: string; highlight?: string | string[] };
+  buttons: ReactNode | ReactNode[];
+  customIcon?: IconType;
+  modalContentProps?: DialogContentProps;
+  footerDescription?: string | ReactNode;
+  trigger: TriggerProps;
+} & Omit<DialogRootProps, "open" | "children">;
 
-const StatusModal = ({ trigger, customIcon = LuCrown, ...props }: StatusModalProps) => {
-  const isControlled = 'open' in trigger
-  const colorPalette = 'blue'
+const StatusModal = ({
+  trigger,
+  customIcon = LuCrown,
+  ...props
+}: StatusModalProps) => {
+  const isControlled = "open" in trigger;
+  const colorPalette = "blue";
+  const descriptionText =
+    typeof props.description === "string"
+      ? props.description
+      : props.description?.text;
+  const highlightQueries =
+    typeof props.description === "object" && props.description?.highlight
+      ? Array.isArray(props.description.highlight)
+        ? props.description.highlight
+        : [props.description.highlight]
+      : [];
 
   return (
     <Dialog.Root
@@ -49,10 +72,10 @@ const StatusModal = ({ trigger, customIcon = LuCrown, ...props }: StatusModalPro
       {...(isControlled && {
         open: trigger.open,
         onOpenChange: (e) => {
-          if ('onOpen' in trigger && 'onClose' in trigger) {
-            e.open ? trigger.onOpen() : trigger.onClose()
-          } else if ('setOpen' in trigger) {
-            trigger.setOpen(e.open)
+          if ("onOpen" in trigger && "onClose" in trigger) {
+            e.open ? trigger.onOpen() : trigger.onClose();
+          } else if ("setOpen" in trigger) {
+            trigger.setOpen(e.open);
           }
         },
       })}
@@ -81,19 +104,40 @@ const StatusModal = ({ trigger, customIcon = LuCrown, ...props }: StatusModalPro
                 w="60px"
                 h="60px"
               >
-                <Icon as={customIcon} boxSize={5} color={`${colorPalette}.contrast`} />
+                <Icon
+                  as={customIcon}
+                  boxSize={5}
+                  color={`${colorPalette}.contrast`}
+                />
               </Center>
 
               <VStack w="full" rowGap={3} maxH="60dvh" overflow="auto">
                 {/* 타이틀 */}
-                <Text textStyle="t2-semibold-compact" textAlign="center" whiteSpace="pre-wrap">
+                <Text
+                  textStyle="t2-semibold-compact"
+                  textAlign="center"
+                  whiteSpace="pre-wrap"
+                >
                   {props.title}
                 </Text>
 
                 {/* 설명 */}
-                {props.description && (
-                  <Text textStyle="b1-regular" textAlign="center" whiteSpace="pre-wrap">
-                    {props.description}
+                {descriptionText && (
+                  <Text
+                    textStyle="b1-regular"
+                    textAlign="center"
+                    whiteSpace="pre-wrap"
+                  >
+                    {highlightQueries.length ? (
+                      <Highlight
+                        query={highlightQueries}
+                        styles={{ color: `${colorPalette}.solid` }}
+                      >
+                        {descriptionText}
+                      </Highlight>
+                    ) : (
+                      descriptionText
+                    )}
                   </Text>
                 )}
               </VStack>
@@ -106,9 +150,9 @@ const StatusModal = ({ trigger, customIcon = LuCrown, ...props }: StatusModalPro
                 rowGap={3}
                 colorPalette={colorPalette}
                 css={{
-                  '& button': {
-                    alignSelf: 'stretch',
-                    borderRadius: 'full',
+                  "& button": {
+                    alignSelf: "stretch",
+                    borderRadius: "full",
                   },
                 }}
               >
@@ -117,8 +161,13 @@ const StatusModal = ({ trigger, customIcon = LuCrown, ...props }: StatusModalPro
 
               {/* 버튼 아래 설명 */}
               {props.footerDescription &&
-                (typeof props.footerDescription === 'string' ? (
-                  <Text textStyle="c-medium" color="fg.muted" textAlign="center">
+                (typeof props.footerDescription === "string" ? (
+                  <Text
+                    textStyle="c-medium"
+                    color="fg.muted"
+                    textAlign="center"
+                    whiteSpace="pre-wrap"
+                  >
                     {props.footerDescription}
                   </Text>
                 ) : (
@@ -129,7 +178,7 @@ const StatusModal = ({ trigger, customIcon = LuCrown, ...props }: StatusModalPro
         </Dialog.Positioner>
       </Portal>
     </Dialog.Root>
-  )
-}
+  );
+};
 
-export default StatusModal
+export default StatusModal;
