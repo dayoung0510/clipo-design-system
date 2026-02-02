@@ -53,14 +53,14 @@ const meta: Meta<typeof BasicModal> = {
         category: "Footer",
         type: {
           summary:
-            "ReactNode | ButtonProps & { label?: string; isHide?: boolean; onSave?: () => void }",
+            "ReactNode | ButtonProps & { label?: string; isHidden?: boolean; onSave?: () => void }",
         },
         disable: true,
       },
       control: false,
     },
-    "footer.isHide": {
-      name: "footer > isHide",
+    "footer.isHidden": {
+      name: "footer > isHidden",
       description: "푸터 영역을 완전히 숨길지 여부",
       table: { category: "Footer", type: { summary: "boolean" } },
       control: { type: "boolean" },
@@ -85,8 +85,8 @@ const meta: Meta<typeof BasicModal> = {
       table: { category: "Footer", type: { summary: "string" } },
       control: { type: "text" },
     },
-    "footer.saveButton.isHide": {
-      name: "🟢 footer > saveButton > isHide",
+    "footer.saveButton.isHidden": {
+      name: "🟢 footer > saveButton > isHidden",
       description: "저장 버튼 숨김 여부",
       table: { category: "Footer", type: { summary: "boolean" } },
       control: { type: "boolean" },
@@ -127,8 +127,8 @@ const meta: Meta<typeof BasicModal> = {
       control: false,
       action: "onCancel",
     },
-    "footer.cancelButton.isHide": {
-      name: "🟠 footer > cancelButton > isHide",
+    "footer.cancelButton.isHidden": {
+      name: "🟠 footer > cancelButton > isHidden",
       description: "취소 버튼 숨김 여부",
       table: { category: "Footer", type: { summary: "boolean" } },
       control: { type: "boolean" },
@@ -154,8 +154,8 @@ const meta: Meta<typeof BasicModal> = {
       control: false,
       action: "onClick",
     },
-    "footer.customButton.isHide": {
-      name: "🟣 footer > customButton > isHide",
+    "footer.customButton.isHidden": {
+      name: "🟣 footer > customButton > isHidden",
       description: "커스텀 버튼 숨김 여부",
       table: { category: "Footer", type: { summary: "boolean" } },
       control: { type: "boolean" },
@@ -191,13 +191,13 @@ const meta: Meta<typeof BasicModal> = {
   args: {
     title: "기본 모달 제목",
     footer: {
-      isHide: false,
+      isHidden: false,
       align: "end",
       description: "추가 안내 문구를 표시할 수 있습니다.",
       saveButton: { label: "저장" },
       cancelButton: { label: "취소" },
     },
-    "footer.isHide": false,
+    "footer.isHidden": false,
     "footer.align": "end",
     "footer.description": (
       <HStack>
@@ -205,11 +205,11 @@ const meta: Meta<typeof BasicModal> = {
       </HStack>
     ),
     "footer.saveButton.label": "저장",
-    "footer.saveButton.isHide": false,
+    "footer.saveButton.isHidden": false,
     "footer.saveButton.onSave": undefined,
     "footer.saveButton.node": undefined,
     "footer.cancelButton.label": "취소",
-    "footer.cancelButton.isHide": false,
+    "footer.cancelButton.isHidden": false,
     "footer.cancelButton.onCancel": undefined,
     "footer.cancelButton.node": undefined,
     trigger: {
@@ -240,12 +240,13 @@ export const Default: Story = {
         ? {
             ...baseSave,
             label: a["footer.saveButton.label"] ?? (baseSave as any)?.label,
-            isHide: a["footer.saveButton.isHide"] ?? (baseSave as any)?.isHide,
+            isHidden:
+              a["footer.saveButton.isHidden"] ?? (baseSave as any)?.isHidden,
             onSave: a["footer.saveButton.onSave"] ?? (baseSave as any)?.onSave,
           }
         : {
             label: a["footer.saveButton.label"] ?? undefined,
-            isHide: a["footer.saveButton.isHide"] ?? false,
+            isHidden: a["footer.saveButton.isHidden"] ?? false,
             onSave: a["footer.saveButton.onSave"] ?? undefined,
           });
 
@@ -257,20 +258,21 @@ export const Default: Story = {
         ? {
             ...baseCancel,
             label: a["footer.cancelButton.label"] ?? (baseCancel as any)?.label,
-            isHide:
-              a["footer.cancelButton.isHide"] ?? (baseCancel as any)?.isHide,
+            isHidden:
+              a["footer.cancelButton.isHidden"] ??
+              (baseCancel as any)?.isHidden,
             onCancel:
               a["footer.cancelButton.onCancel"] ??
               (baseCancel as any)?.onCancel,
           }
         : {
             label: a["footer.cancelButton.label"] ?? undefined,
-            isHide: a["footer.cancelButton.isHide"] ?? false,
+            isHidden: a["footer.cancelButton.isHidden"] ?? false,
             onCancel: a["footer.cancelButton.onCancel"] ?? undefined,
           });
     const mergedFooter = {
       ...(args.footer ?? {}),
-      isHide: a["footer.isHide"] ?? args.footer?.isHide,
+      isHidden: a["footer.isHidden"] ?? args.footer?.isHidden,
       align: a["footer.align"] ?? args.footer?.align,
       description: a["footer.description"] ?? args.footer?.description,
       saveButton: mergedSaveButton,

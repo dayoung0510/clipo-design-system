@@ -22,22 +22,22 @@ type BasicModalProps = {
   title: string | ReactNode;
   modalContentProps?: DialogContentProps;
   footer: {
-    isHide?: boolean;
+    isHidden?: boolean;
     align?: "end" | "between";
     description?: string | ReactNode;
     saveButton?:
       | ReactNode
       | (ButtonProps & {
           label?: string;
-          isHide?: boolean;
+          isHidden?: boolean;
           onSave?: () => void;
         });
-    cancelButton?: ButtonProps & { label?: string; isHide?: boolean };
+    cancelButton?: ButtonProps & { label?: string; isHidden?: boolean };
     customButton?:
       | ReactNode
       | (ButtonProps & {
           label?: string;
-          isHide?: boolean;
+          isHidden?: boolean;
           onClick?: () => void;
         });
   };
@@ -47,19 +47,19 @@ type BasicModalProps = {
 
 type CancelButtonConfig = ButtonProps & {
   label?: string;
-  isHide?: boolean;
+  isHidden?: boolean;
   onCancel?: () => void;
 };
 
 type SaveButtonConfig = ButtonProps & {
   label?: string;
-  isHide?: boolean;
+  isHidden?: boolean;
   onSave?: () => void;
 };
 
 type CustomButtonConfig = ButtonProps & {
   label?: string;
-  isHide?: boolean;
+  isHidden?: boolean;
   onClick?: () => void;
 };
 
@@ -97,7 +97,7 @@ const BasicModal = ({
       return (
         <Button
           variant="outline"
-          hidden={cancelCfg.isHide}
+          hidden={cancelCfg.isHidden}
           data-testid={`${testIdPrefix}-modal-cancel-button`}
           onClick={() => onCancel()}
           {...rest}
@@ -111,7 +111,7 @@ const BasicModal = ({
       <Dialog.ActionTrigger asChild>
         <Button
           variant="outline"
-          hidden={cancelCfg.isHide}
+          hidden={cancelCfg.isHidden}
           data-testid={`${testIdPrefix}-modal-cancel-button`}
           {...cancelCfg}
         >
@@ -135,7 +135,7 @@ const BasicModal = ({
       <Button
         data-testid={`${testIdPrefix}-modal-save-button`}
         {...saveCfg}
-        hidden={saveCfg.isHide}
+        hidden={saveCfg.isHidden}
         onClick={(e) => {
           saveCfg.onSave?.();
           saveCfg.onClick?.(e);
@@ -159,7 +159,7 @@ const BasicModal = ({
 
     return (
       <Button
-        hidden={customCfg.isHide}
+        hidden={customCfg.isHidden}
         data-testid={`${testIdPrefix}-modal-cancel-button`}
         {...customCfg}
       >
@@ -224,7 +224,7 @@ const BasicModal = ({
             </Dialog.Body>
 
             {/* 푸터 */}
-            {!footer.isHide && (
+            {!footer.isHidden && (
               <Dialog.Footer data-testid={`${testIdPrefix}-modal-footer`}>
                 {footer.description && (
                   <>
