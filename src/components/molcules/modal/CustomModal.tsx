@@ -1,6 +1,7 @@
 import { Dialog, Portal } from "@chakra-ui/react";
 import type {
   DialogContentProps,
+  DialogHeaderProps,
   DialogRootProps,
   DialogTriggerProps,
   UseDisclosureReturn,
@@ -28,6 +29,7 @@ type CustomModalProps = {
   header?: ReactNode;
   footer?: ReactNode;
   modalContentProps?: DialogContentProps;
+  modalHeaderProps?: DialogHeaderProps;
   showCloseIconButton?: boolean; // 상단 x아이콘 렌더링 여부
 } & Omit<DialogRootProps, "open">;
 
