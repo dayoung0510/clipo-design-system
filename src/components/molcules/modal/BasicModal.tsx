@@ -2,6 +2,7 @@ import { CloseButton } from "../../atoms/close-button/close-button";
 import { Button, Dialog, HStack, Portal, Spacer, Text } from "@chakra-ui/react";
 import type {
   ButtonProps,
+  DialogBackdropProps,
   DialogContentProps,
   DialogRootProps,
   DialogTriggerProps,
@@ -21,6 +22,7 @@ type TriggerProps =
 type BasicModalProps = {
   title: string | ReactNode;
   modalContentProps?: DialogContentProps;
+  backdropProps?: DialogBackdropProps;
   footer: {
     isHidden?: boolean;
     align?: "end" | "between";
@@ -201,7 +203,7 @@ const BasicModal = ({
         </Dialog.Trigger>
       )}
       <Portal>
-        <Dialog.Backdrop />
+        <Dialog.Backdrop {...props.backdropProps} />
         <Dialog.Positioner>
           <Dialog.Content
             data-testid={`${testIdPrefix}-modal-content`}

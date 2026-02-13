@@ -205,6 +205,11 @@ const meta: Meta<typeof BasicModal> = {
       table: { category: "Layout", type: { summary: "boolean" } },
       control: { type: "boolean" },
     },
+    backdropProps: {
+      description: "모달 배경 영역의 추가 props",
+      table: { category: "Layout", type: { summary: "DialogBackdropProps" } },
+      control: false,
+    },
   } as any,
   args: {
     title: "기본 모달 제목",
