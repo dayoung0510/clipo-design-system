@@ -58,6 +58,11 @@ const meta: Meta<typeof CustomModal> = {
       table: { category: "Layout", type: { summary: "DialogHeaderProps" } },
       control: false,
     },
+    modalBodyProps: {
+      description: "모달 본문 영역에 전달할 추가 props",
+      table: { category: "Layout", type: { summary: "DialogBodyProps" } },
+      control: false,
+    },
     closeOnInteractOutside: {
       description: "모달 바깥영역 클릭 시 모달 닫기 여부",
       table: { category: "Layout", type: { summary: "boolean" } },
