@@ -210,6 +210,11 @@ const meta: Meta<typeof BasicModal> = {
       table: { category: "Layout", type: { summary: "DialogBackdropProps" } },
       control: false,
     },
+    showCloseIconButton: {
+      description: "상단 X버튼 렌더링 여부",
+      table: { category: "Layout", type: { summary: "boolean" } },
+      control: { type: "boolean" },
+    },
   } as any,
   args: {
     title: "기본 모달 제목",

@@ -22,6 +22,7 @@ type TriggerProps =
 type BasicModalProps = {
   title: string | ReactNode;
   modalContentProps?: DialogContentProps;
+  showCloseIconButton?: boolean;
   backdropProps?: DialogBackdropProps;
   footer: {
     isHidden?: boolean;
@@ -76,6 +77,7 @@ const BasicModal = ({
   modalContentProps,
   children,
   size = "md",
+  showCloseIconButton = true,
   ...props
 }: BasicModalProps) => {
   const isControlled = "open" in trigger;
@@ -210,9 +212,11 @@ const BasicModal = ({
             {...modalContentProps}
           >
             {/* 상단 X버튼 */}
-            <Dialog.CloseTrigger asChild={true}>
-              <CloseButton colorPalette="gray" size="sm" />
-            </Dialog.CloseTrigger>
+            {showCloseIconButton && (
+              <Dialog.CloseTrigger asChild={true}>
+                <CloseButton colorPalette="gray" size="sm" />
+              </Dialog.CloseTrigger>
+            )}
 
             {/* 헤더 */}
             <Dialog.Header>
