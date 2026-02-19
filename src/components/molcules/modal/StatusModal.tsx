@@ -10,6 +10,7 @@ import {
   Highlight,
 } from "@chakra-ui/react";
 import type {
+  ColorPalette,
   DialogContentProps,
   DialogRootProps,
   DialogTriggerProps,
@@ -39,6 +40,7 @@ type StatusModalProps = {
   description?: string | { text: string; highlight?: string | string[] };
   buttons: ReactNode | ReactNode[];
   customIcon?: IconType;
+  colorPalette?: ColorPalette;
   modalContentProps?: DialogContentProps;
   footerDescription?: string | ReactNode;
   trigger: TriggerProps;
@@ -47,10 +49,10 @@ type StatusModalProps = {
 const StatusModal = ({
   trigger,
   customIcon = LuCrown,
+  colorPalette = "blue",
   ...props
 }: StatusModalProps) => {
   const isControlled = "open" in trigger;
-  const colorPalette = "blue";
   const descriptionText =
     typeof props.description === "string"
       ? props.description

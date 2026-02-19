@@ -71,6 +71,12 @@ const meta = {
         LuAirplay,
       },
     },
+    colorPalette: {
+      description: "상단 아이콘 및 버튼 컬러 팔레트를 선택합니다.",
+      table: { category: "Main", type: { summary: "ColorPalette" } },
+      control: { type: "select" },
+      options: ["blue", "green", "red", "yellow", "purple"],
+    },
 
     // Layout / Footer
     modalContentProps: {
