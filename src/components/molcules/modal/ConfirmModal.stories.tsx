@@ -33,6 +33,12 @@ const meta = {
         },
       },
     },
+    loading: {
+      description:
+        "로딩 상태 여부입니다.<br/>`true`이면 본문/버튼 대신 중앙에 스피너가 표시됩니다.",
+      table: { category: "Main", type: { summary: "boolean" } },
+      control: { type: "boolean" },
+    },
 
     // 2) 트리거
     trigger: {
@@ -142,6 +148,7 @@ const meta = {
   args: {
     title: "정말로 삭제하시겠어요?",
     description: "이 작업은 되돌릴 수 없습니다.",
+    loading: false,
     modalType: "positive",
     trigger: {
       triggerButton: <Button colorPalette="blue">모달 열기</Button>,

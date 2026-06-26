@@ -1,4 +1,4 @@
-import { Dialog, Portal } from "@chakra-ui/react";
+import { Dialog, Portal, Center, Spinner } from "@chakra-ui/react";
 import type {
   DialogBodyProps,
   DialogContentProps,
@@ -29,6 +29,7 @@ type CustomModalProps = {
   trigger: TriggerProps;
   header?: ReactNode;
   footer?: ReactNode;
+  loading?: boolean;
   modalContentProps?: DialogContentProps;
   modalHeaderProps?: DialogHeaderProps;
   modalBodyProps?: DialogBodyProps;
@@ -41,7 +42,9 @@ const CustomModal = ({
   children,
   footer,
   size = "md",
+  loading = false,
   showCloseIconButton = true,
+  unmountOnExit = false,
   ...props
 }: CustomModalProps) => {
   const isControlled = "open" in trigger;
@@ -50,7 +53,7 @@ const CustomModal = ({
     <Dialog.Root
       role="dialog"
       placement="center"
-      unmountOnExit={false}
+      unmountOnExit={unmountOnExit}
       size={size}
       {...props}
       {...(isControlled && {
@@ -73,24 +76,36 @@ const CustomModal = ({
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content {...props.modalContentProps}>
-            {/* 상단 X버튼 */}
-            {showCloseIconButton && (
-              <Dialog.CloseTrigger asChild={true}>
-                <CloseButton colorPalette="gray" size="sm" />
-              </Dialog.CloseTrigger>
-            )}
+          <Dialog.Content maxH="100vh" {...props.modalContentProps}>
+            {loading ? (
+              <Center w="full" py={10}>
+                <Spinner size="lg" colorPalette="blue" />
+              </Center>
+            ) : (
+              <>
+                {/* 상단 X버튼 */}
+                {showCloseIconButton && (
+                  <Dialog.CloseTrigger asChild={true}>
+                    <CloseButton colorPalette="gray" size="sm" />
+                  </Dialog.CloseTrigger>
+                )}
 
-            {header && <Dialog.Header>{header}</Dialog.Header>}
-            <Dialog.Body
-              maxH="80dvh"
-              overflow="auto"
-              {...props.modalBodyProps}
-              {...(!header && { pt: 6 })}
-            >
-              {children}
-            </Dialog.Body>
-            {footer && <Dialog.Footer>{footer}</Dialog.Footer>}
+                {header && (
+                  <Dialog.Header {...props.modalHeaderProps}>
+                    {header}
+                  </Dialog.Header>
+                )}
+                <Dialog.Body
+                  maxH="80dvh"
+                  overflow="auto"
+                  {...(!header && { pt: 6 })}
+                  {...props.modalBodyProps}
+                >
+                  {children}
+                </Dialog.Body>
+                {footer && <Dialog.Footer>{footer}</Dialog.Footer>}
+              </>
+            )}
           </Dialog.Content>
         </Dialog.Positioner>
       </Portal>

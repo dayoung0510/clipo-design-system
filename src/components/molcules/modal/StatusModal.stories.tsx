@@ -40,6 +40,12 @@ const meta = {
         },
       },
     },
+    loading: {
+      description:
+        "로딩 상태 여부입니다.<br/>`true`이면 본문/버튼 대신 중앙에 스피너가 표시됩니다.",
+      table: { category: "Main", type: { summary: "boolean" } },
+      control: { type: "boolean" },
+    },
     buttons: {
       description:
         '세로로 배치될 버튼 영역입니다.<br/><br/>버튼 2개 이상일 때는 아래와 같은 형태 권장`[<Button key="first" />, <Button key="second" />]`',
@@ -118,6 +124,7 @@ const meta = {
   args: {
     title: "이 부분은 title 영역입니다.",
     description: "이 부분은 description 영역입니다.",
+    loading: false,
     trigger: {
       triggerButton: <Button colorPalette="blue">모달 열기</Button>,
     },

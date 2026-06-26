@@ -8,6 +8,7 @@ import {
   Text,
   VStack,
   Highlight,
+  Spinner,
 } from "@chakra-ui/react";
 import type {
   ColorPalette,
@@ -43,6 +44,7 @@ type StatusModalProps = {
   colorPalette?: ColorPalette;
   modalContentProps?: DialogContentProps;
   footerDescription?: string | ReactNode;
+  loading?: boolean;
   trigger: TriggerProps;
 } & Omit<DialogRootProps, "open" | "children">;
 
@@ -70,7 +72,7 @@ const StatusModal = ({
       placement="center"
       unmountOnExit={false}
       {...props}
-      size="sm"
+      size="sm" // 사이즈는 sm로 고정
       {...(isControlled && {
         open: trigger.open,
         onOpenChange: (e) => {
@@ -96,86 +98,92 @@ const StatusModal = ({
               <CloseButton colorPalette="gray" size="sm" />
             </Dialog.CloseTrigger>
 
-            <VStack w="full" rowGap={5}>
-              {/* 아이콘 */}
-              <Center
-                bg={`${colorPalette}.solid`}
-                borderWidth="6px"
-                borderColor={`${colorPalette}.subtle`}
-                borderRadius="full"
-                w="60px"
-                h="60px"
-              >
-                <Icon
-                  as={customIcon}
-                  boxSize={5}
-                  color={`${colorPalette}.contrast`}
-                />
+            {props.loading ? (
+              <Center w="full" py={10}>
+                <Spinner size="lg" colorPalette={colorPalette} />
               </Center>
-
-              <VStack w="full" rowGap={3} maxH="60dvh" overflow="auto">
-                {/* 타이틀 */}
-                <Text
-                  textStyle="t2-semibold-compact"
-                  textAlign="center"
-                  whiteSpace="pre-wrap"
+            ) : (
+              <VStack w="full" rowGap={5}>
+                {/* 아이콘 */}
+                <Center
+                  bg={`${colorPalette}.solid`}
+                  borderWidth="6px"
+                  borderColor={`${colorPalette}.subtle`}
+                  borderRadius="full"
+                  w="60px"
+                  h="60px"
                 >
-                  {props.title}
-                </Text>
+                  <Icon
+                    as={customIcon}
+                    boxSize={5}
+                    color={`${colorPalette}.contrast`}
+                  />
+                </Center>
 
-                {/* 설명 */}
-                {descriptionText && (
+                <VStack w="full" rowGap={3} maxH="60dvh" overflow="auto">
+                  {/* 타이틀 */}
                   <Text
-                    textStyle="b1-regular"
+                    textStyle="t2-semibold-compact"
                     textAlign="center"
                     whiteSpace="pre-wrap"
                   >
-                    {highlightQueries.length ? (
-                      <Highlight
-                        query={highlightQueries}
-                        styles={{ color: `${colorPalette}.solid` }}
-                      >
-                        {descriptionText}
-                      </Highlight>
-                    ) : (
-                      descriptionText
-                    )}
+                    {props.title}
                   </Text>
-                )}
+
+                  {/* 설명 */}
+                  {descriptionText && (
+                    <Text
+                      textStyle="b1-regular"
+                      textAlign="center"
+                      whiteSpace="pre-wrap"
+                    >
+                      {highlightQueries.length ? (
+                        <Highlight
+                          query={highlightQueries}
+                          styles={{ color: `${colorPalette}.solid` }}
+                        >
+                          {descriptionText}
+                        </Highlight>
+                      ) : (
+                        descriptionText
+                      )}
+                    </Text>
+                  )}
+                </VStack>
+
+                {/* 하단버튼 */}
+                <ButtonGroup
+                  w="full"
+                  size="lg"
+                  flexDirection="column"
+                  rowGap={3}
+                  colorPalette={colorPalette}
+                  css={{
+                    "& button": {
+                      alignSelf: "stretch",
+                      borderRadius: "full",
+                    },
+                  }}
+                >
+                  {Children.toArray(props.buttons)}
+                </ButtonGroup>
+
+                {/* 버튼 아래 설명 */}
+                {props.footerDescription &&
+                  (typeof props.footerDescription === "string" ? (
+                    <Text
+                      textStyle="c-medium"
+                      color="fg.muted"
+                      textAlign="center"
+                      whiteSpace="pre-wrap"
+                    >
+                      {props.footerDescription}
+                    </Text>
+                  ) : (
+                    props.footerDescription
+                  ))}
               </VStack>
-
-              {/* 하단버튼 */}
-              <ButtonGroup
-                w="full"
-                size="lg"
-                flexDirection="column"
-                rowGap={3}
-                colorPalette={colorPalette}
-                css={{
-                  "& button": {
-                    alignSelf: "stretch",
-                    borderRadius: "full",
-                  },
-                }}
-              >
-                {Children.toArray(props.buttons)}
-              </ButtonGroup>
-
-              {/* 버튼 아래 설명 */}
-              {props.footerDescription &&
-                (typeof props.footerDescription === "string" ? (
-                  <Text
-                    textStyle="c-medium"
-                    color="fg.muted"
-                    textAlign="center"
-                    whiteSpace="pre-wrap"
-                  >
-                    {props.footerDescription}
-                  </Text>
-                ) : (
-                  props.footerDescription
-                ))}
-            </VStack>
+            )}
           </Dialog.Content>
         </Dialog.Positioner>
       </Portal>

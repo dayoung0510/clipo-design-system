@@ -32,6 +32,12 @@ const meta: Meta<typeof BasicModal> = {
       table: { category: "Main", type: { summary: "ReactNode" } },
       control: false,
     },
+    loading: {
+      description:
+        "로딩 상태 여부입니다.<br/>`true`이면 본문/푸터 대신 중앙에 스피너가 표시됩니다.",
+      table: { category: "Main", type: { summary: "boolean" } },
+      control: { type: "boolean" },
+    },
 
     // 2. Trigger 그룹
     trigger: {
@@ -218,6 +224,7 @@ const meta: Meta<typeof BasicModal> = {
   } as any,
   args: {
     title: "기본 모달 제목",
+    loading: false,
     footer: {
       isHidden: false,
       align: "end",

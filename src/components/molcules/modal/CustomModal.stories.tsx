@@ -32,6 +32,12 @@ const meta: Meta<typeof CustomModal> = {
       table: { category: "Main", type: { summary: "ReactNode" } },
       control: false,
     },
+    loading: {
+      description:
+        "로딩 상태 여부입니다.<br/>`true`이면 본문/푸터 대신 중앙에 스피너가 표시됩니다.",
+      table: { category: "Main", type: { summary: "boolean" } },
+      control: { type: "boolean" },
+    },
 
     // 트리거
     trigger: {
@@ -76,6 +82,7 @@ const meta: Meta<typeof CustomModal> = {
   },
   args: {
     header: <Text textStyle="t4-semibold-compact">커스텀 헤더</Text>,
+    loading: false,
     children: (
       <Text>
         자유롭게 커스텀할 수 있는 모달 본문 영역입니다. 이미지, 폼, 버튼 등

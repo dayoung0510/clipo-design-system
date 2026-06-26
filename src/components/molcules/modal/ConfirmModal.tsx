@@ -8,6 +8,7 @@ import {
   Text,
   VStack,
   Highlight,
+  Spinner,
 } from "@chakra-ui/react";
 import type {
   ButtonProps,
@@ -46,6 +47,7 @@ type BaseConfirmModalProps = {
   modalType?: "positive" | "negative";
   customIcon?: IconType;
   title: string;
+  loading?: boolean;
   description?: string | { text: string; highlight?: string | string[] };
   cancelButton?: { label?: string; buttonProps?: ButtonProps };
   confirmButton?: {
@@ -114,100 +116,110 @@ const ConfirmModal = ({
         <Dialog.Backdrop />
         <Dialog.Positioner>
           <Dialog.Content px={5} py={7} {...props.modalContentProps}>
-            <VStack w="full" rowGap={5}>
-              {/* 아이콘 */}
-              <Center bg={`${colorPalette}.subtle`} borderRadius="full" p={3}>
-                <Icon as={icon} boxSize={5} color={`${colorPalette}.solid`} />
+            {props.loading ? (
+              <Center w="full" py={6}>
+                <Spinner size="lg" colorPalette={colorPalette} />
               </Center>
+            ) : (
+              <VStack w="full" rowGap={5}>
+                {/* 아이콘 */}
+                <Center bg={`${colorPalette}.subtle`} borderRadius="full" p={3}>
+                  <Icon as={icon} boxSize={5} color={`${colorPalette}.solid`} />
+                </Center>
 
-              <VStack w="full" rowGap={3} maxH="60dvh" overflow="auto">
-                {/* 타이틀 */}
-                <Text
-                  textStyle="t4-semibold"
-                  textAlign="center"
-                  whiteSpace="pre-wrap"
-                >
-                  {props.title}
-                </Text>
-
-                {/* 설명 */}
-                {descriptionText && (
+                <VStack w="full" rowGap={3} maxH="60dvh" overflow="auto">
+                  {/* 타이틀 */}
                   <Text
-                    textStyle="b2-regular"
+                    textStyle="t4-semibold"
                     textAlign="center"
                     whiteSpace="pre-wrap"
                   >
-                    {highlightQueries.length ? (
-                      <Highlight
-                        query={highlightQueries}
-                        styles={{ color: `${colorPalette}.solid` }}
-                      >
-                        {descriptionText}
-                      </Highlight>
-                    ) : (
-                      descriptionText
-                    )}
+                    {props.title}
                   </Text>
-                )}
-              </VStack>
 
-              {/**
-               *
-               * 버튼영역
-               *
-               */}
-              {!(props.customButtons ?? []).length && (
-                <ButtonGroup w="full" columnGap={3} colorPalette={colorPalette}>
-                  {/* 취소버튼 */}
-                  <Dialog.ActionTrigger asChild>
-                    <Button
-                      variant="outline"
-                      flex={1}
-                      {...props.cancelButton?.buttonProps}
+                  {/* 설명 */}
+                  {descriptionText && (
+                    <Text
+                      textStyle="b2-regular"
+                      textAlign="center"
+                      whiteSpace="pre-wrap"
                     >
-                      {cancelText}
+                      {highlightQueries.length ? (
+                        <Highlight
+                          query={highlightQueries}
+                          styles={{ color: `${colorPalette}.solid` }}
+                        >
+                          {descriptionText}
+                        </Highlight>
+                      ) : (
+                        descriptionText
+                      )}
+                    </Text>
+                  )}
+                </VStack>
+
+                {/**
+                 *
+                 * 버튼영역
+                 *
+                 */}
+                {!(props.customButtons ?? []).length && (
+                  <ButtonGroup
+                    w="full"
+                    columnGap={3}
+                    colorPalette={colorPalette}
+                  >
+                    {/* 취소버튼 */}
+                    <Dialog.ActionTrigger asChild>
+                      <Button
+                        variant="outline"
+                        flex={1}
+                        {...props.cancelButton?.buttonProps}
+                      >
+                        {cancelText}
+                      </Button>
+                    </Dialog.ActionTrigger>
+
+                    {/* 확인버튼 */}
+                    <Button
+                      flex={1}
+                      {...props.confirmButton?.buttonProps}
+                      onClick={(event) => {
+                        props.confirmButton?.onConfirm?.(event);
+                      }}
+                    >
+                      {confirmText}
                     </Button>
-                  </Dialog.ActionTrigger>
+                  </ButtonGroup>
+                )}
 
-                  {/* 확인버튼 */}
-                  <Button
-                    flex={1}
-                    {...props.confirmButton?.buttonProps}
-                    onClick={(event) => {
-                      props.confirmButton?.onConfirm?.(event);
-                    }}
+                {/* 커스텀 버튼들을 넘겨받은 경우 */}
+                {!!(props.customButtons ?? []).length && (
+                  <ButtonGroup
+                    w="full"
+                    columnGap={3}
+                    colorPalette={colorPalette}
+                    css={{ "& button": { flex: 1 } }}
                   >
-                    {confirmText}
-                  </Button>
-                </ButtonGroup>
-              )}
+                    {Children.toArray(props.customButtons)}
+                  </ButtonGroup>
+                )}
 
-              {/* 커스텀 버튼들을 넘겨받은 경우 */}
-              {!!(props.customButtons ?? []).length && (
-                <ButtonGroup
-                  w="full"
-                  columnGap={3}
-                  colorPalette={colorPalette}
-                  css={{ "& button": { flex: 1 } }}
-                >
-                  {Children.toArray(props.customButtons)}
-                </ButtonGroup>
-              )}
-
-              {/* 버튼 아래 설명 */}
-              {props.footerDescription &&
-                (typeof props.footerDescription === "string" ? (
-                  <Text
-                    textStyle="c-medium"
-                    color="fg.muted"
-                    textAlign="center"
-                  >
-                    {props.footerDescription}
-                  </Text>
-                ) : (
-                  props.footerDescription
-                ))}
-            </VStack>
+                {/* 버튼 아래 설명 */}
+                {props.footerDescription &&
+                  (typeof props.footerDescription === "string" ? (
+                    <Text
+                      textStyle="c-medium"
+                      color="fg.muted"
+                      textAlign="center"
+                    >
+                      {props.footerDescription}
+                    </Text>
+                  ) : (
+                    props.footerDescription
+                  ))}
+              </VStack>
+            )}
           </Dialog.Content>
         </Dialog.Positioner>
       </Portal>

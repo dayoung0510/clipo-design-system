@@ -1,5 +1,15 @@
 import { CloseButton } from "../../atoms/close-button/close-button";
-import { Button, Dialog, HStack, Portal, Spacer, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Dialog,
+  HStack,
+  Portal,
+  Spacer,
+  Text,
+  Center,
+  Spinner,
+  Box,
+} from "@chakra-ui/react";
 import type {
   ButtonProps,
   DialogBackdropProps,
@@ -24,6 +34,7 @@ type BasicModalProps = {
   modalContentProps?: DialogContentProps;
   showCloseIconButton?: boolean;
   backdropProps?: DialogBackdropProps;
+  loading?: boolean;
   footer: {
     isHidden?: boolean;
     align?: "end" | "between";
@@ -208,74 +219,89 @@ const BasicModal = ({
         <Dialog.Backdrop {...props.backdropProps} />
         <Dialog.Positioner>
           <Dialog.Content
+            maxH="100vh"
             data-testid={`${testIdPrefix}-modal-content`}
             {...modalContentProps}
           >
-            {/* 상단 X버튼 */}
-            {showCloseIconButton && (
-              <Dialog.CloseTrigger asChild={true}>
-                <CloseButton colorPalette="gray" size="sm" />
-              </Dialog.CloseTrigger>
-            )}
-
-            {/* 헤더 */}
-            <Dialog.Header>
-              {typeof props.title === "string" ? (
-                <Text textStyle="t4-semibold-compact">{props.title}</Text>
-              ) : (
-                props.title
-              )}
-            </Dialog.Header>
-
-            {/* 바디 */}
-            <Dialog.Body
-              data-testid={`${testIdPrefix}-modal-body`}
-              whiteSpace="pre-wrap"
-              maxH="80dvh"
-              overflow="auto"
-            >
-              {children}
-            </Dialog.Body>
-
-            {/* 푸터 */}
-            {!footer.isHidden && (
-              <Dialog.Footer data-testid={`${testIdPrefix}-modal-footer`}>
-                {footer.description && (
-                  <>
-                    <Text textStyle="b2-medium-compact" color="fg.muted">
-                      {footer.description}
-                    </Text>
-                    <Spacer />
-                    <HStack columnGap={3}>
-                      {footer.customButton
-                        ? renderCustomButton()
-                        : renderCancelButton()}
-                      {renderSaveButton()}
-                    </HStack>
-                  </>
+            {props.loading ? (
+              <Center w="full" py={10}>
+                <Spinner size="lg" colorPalette="blue" />
+              </Center>
+            ) : (
+              <>
+                {/* 상단 X버튼 */}
+                {showCloseIconButton && (
+                  <Dialog.CloseTrigger asChild={true}>
+                    <CloseButton colorPalette="gray" size="sm" />
+                  </Dialog.CloseTrigger>
                 )}
 
-                {!footer.description && footer.align === "between" && (
-                  <>
-                    {footer.customButton
-                      ? renderCustomButton()
-                      : renderCancelButton()}
-                    <Spacer />
-                    {renderSaveButton()}
-                  </>
-                )}
-
-                {!footer.description &&
-                  (footer.align === "end" || !footer.align) && (
-                    <>
-                      <Spacer />
-                      {footer.customButton
-                        ? renderCustomButton()
-                        : renderCancelButton()}
-                      {renderSaveButton()}
-                    </>
+                {/* 헤더 */}
+                <Dialog.Header>
+                  {typeof props.title === "string" ? (
+                    <Text textStyle="t4-semibold-compact">{props.title}</Text>
+                  ) : (
+                    props.title
                   )}
-              </Dialog.Footer>
+                </Dialog.Header>
+
+                {/* 바디 */}
+                <Dialog.Body
+                  data-testid={`${testIdPrefix}-modal-body`}
+                  whiteSpace="pre-wrap"
+                  maxH="80dvh"
+                  overflow="auto"
+                >
+                  {children}
+                </Dialog.Body>
+
+                {/* 푸터 */}
+                {!footer.isHidden && (
+                  <Dialog.Footer data-testid={`${testIdPrefix}-modal-footer`}>
+                    {footer.description && (
+                      <>
+                        {typeof footer.description === "string" ? (
+                          <Text textStyle="b2-medium-compact" color="fg.muted">
+                            {footer.description}
+                          </Text>
+                        ) : (
+                          <Box textStyle="b2-medium-compact" color="fg.muted">
+                            {footer.description}
+                          </Box>
+                        )}
+                        <Spacer />
+                        <HStack columnGap={3}>
+                          {footer.customButton
+                            ? renderCustomButton()
+                            : renderCancelButton()}
+                          {renderSaveButton()}
+                        </HStack>
+                      </>
+                    )}
+
+                    {!footer.description && footer.align === "between" && (
+                      <>
+                        {footer.customButton
+                          ? renderCustomButton()
+                          : renderCancelButton()}
+                        <Spacer />
+                        {renderSaveButton()}
+                      </>
+                    )}
+
+                    {!footer.description &&
+                      (footer.align === "end" || !footer.align) && (
+                        <>
+                          <Spacer />
+                          {footer.customButton
+                            ? renderCustomButton()
+                            : renderCancelButton()}
+                          {renderSaveButton()}
+                        </>
+                      )}
+                  </Dialog.Footer>
+                )}
+              </>
             )}
           </Dialog.Content>
         </Dialog.Positioner>
